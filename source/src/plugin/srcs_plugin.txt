@@ -1,0 +1,8 @@
+# Sources for namespace Kore::plugin
+
+SET (
+	Kore_SRCS
+	${Kore_SRCS}
+	
+	${CMAKE_CURRENT_LIST_DIR}/PluginsManager.cpp
+)

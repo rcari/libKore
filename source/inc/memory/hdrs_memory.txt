@@ -1,0 +1,16 @@
+# Headers for the Kore::memory namespace
+
+SET (
+	Kore_MOC_HDRS
+	${Kore_MOC_HDRS}
+	
+	# Nothing
+)
+
+SET (
+	Kore_HDRS
+	${Kore_HDRS}
+	
+	${CMAKE_CURRENT_LIST_DIR}/MemoryManager.hpp
+	${CMAKE_CURRENT_LIST_DIR}/SimpleMemoryManager.hpp
+)

@@ -1,0 +1,17 @@
+# Sources for namespace Kore::system
+
+IF ( MSVC )
+	SET (
+		Kore_SRCS
+		${Kore_SRCS}
+		
+		${CMAKE_CURRENT_LIST_DIR}/CPU_MSVC.cpp
+	)
+ELSE ( MSVC )
+	SET (
+		Kore_SRCS
+		${Kore_SRCS}
+		
+		${CMAKE_CURRENT_LIST_DIR}/CPU_GCC.cpp
+	)
+ENDIF ( MSVC )

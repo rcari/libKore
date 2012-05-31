@@ -1,0 +1,16 @@
+# Headers for the Kore::parallel namespace
+
+SET (
+	Kore_MOC_HDRS
+	${Kore_MOC_HDRS}
+	
+	${CMAKE_CURRENT_LIST_DIR}/MetaTasklet.hpp
+	${CMAKE_CURRENT_LIST_DIR}/Tasklet.hpp
+)
+
+SET (
+	Kore_HDRS
+	${Kore_HDRS}
+	
+	${CMAKE_CURRENT_LIST_DIR}/TaskletRunner.hpp
+)

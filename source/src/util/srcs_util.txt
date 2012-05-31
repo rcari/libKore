@@ -1,0 +1,8 @@
+# Sources for namespace Kore::util
+
+SET (
+	Kore_SRCS
+	${Kore_SRCS}
+	
+	${CMAKE_CURRENT_LIST_DIR}/CRC32.cpp
+)

@@ -1,0 +1,20 @@
+# Headers for the Kore::serialization namespace
+
+SET (
+	Kore_MOC_HDRS
+	${Kore_MOC_HDRS}
+	
+	# Nothing
+)
+
+SET (
+	Kore_HDRS
+	${Kore_HDRS}
+	
+	${CMAKE_CURRENT_LIST_DIR}/BlockDeflater.hpp
+	${CMAKE_CURRENT_LIST_DIR}/BlockInflater.hpp
+	${CMAKE_CURRENT_LIST_DIR}/Dumper.hpp
+	${CMAKE_CURRENT_LIST_DIR}/KoreV1.hpp
+	${CMAKE_CURRENT_LIST_DIR}/Loader.hpp
+	${CMAKE_CURRENT_LIST_DIR}/Structures.hpp
+)

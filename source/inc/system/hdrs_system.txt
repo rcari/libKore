@@ -1,0 +1,15 @@
+# Headers for the Kore::system namespace
+
+SET (
+	Kore_MOC_HDRS
+	${Kore_MOC_HDRS}
+	
+	# Nothing
+)
+
+SET (
+	Kore_HDRS
+	${Kore_HDRS}
+	
+	${CMAKE_CURRENT_LIST_DIR}/CPU.hpp
+)

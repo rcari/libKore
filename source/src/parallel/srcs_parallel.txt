@@ -1,0 +1,10 @@
+# Sources for namespace Kore::parallel
+
+SET (
+	Kore_SRCS
+	${Kore_SRCS}
+	
+	${CMAKE_CURRENT_LIST_DIR}/MetaTasklet.cpp
+	${CMAKE_CURRENT_LIST_DIR}/Tasklet.cpp
+	${CMAKE_CURRENT_LIST_DIR}/TaskletRunner.cpp
+)

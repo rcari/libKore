@@ -1,0 +1,12 @@
+# Sources for namespace Kore::data
+
+SET (
+	Kore_SRCS
+	${Kore_SRCS}
+	
+	${CMAKE_CURRENT_LIST_DIR}/Block.cpp
+	${CMAKE_CURRENT_LIST_DIR}/BlockExtension.cpp
+	${CMAKE_CURRENT_LIST_DIR}/BlockFactory.cpp
+	${CMAKE_CURRENT_LIST_DIR}/Library.cpp
+	${CMAKE_CURRENT_LIST_DIR}/MetaBlock.cpp
+)

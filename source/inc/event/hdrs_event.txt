@@ -1,0 +1,16 @@
+# Headers for the Kore::event namespace
+
+SET (
+	Kore_MOC_HDRS
+	${Kore_MOC_HDRS}
+	
+	# Nothing
+)
+
+SET (
+	Kore_HDRS
+	${Kore_HDRS}
+	
+	${CMAKE_CURRENT_LIST_DIR}/ErrorEvent.hpp
+	${CMAKE_CURRENT_LIST_DIR}/KoreEvent.hpp
+)

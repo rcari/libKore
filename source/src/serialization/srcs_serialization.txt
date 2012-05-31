@@ -1,0 +1,10 @@
+# Sources for namespace Kore::serialization
+
+SET (
+	Kore_SRCS
+	${Kore_SRCS}
+	
+	${CMAKE_CURRENT_LIST_DIR}/Dumper.cpp
+	${CMAKE_CURRENT_LIST_DIR}/KoreV1.cpp
+	${CMAKE_CURRENT_LIST_DIR}/Loader.cpp
+)

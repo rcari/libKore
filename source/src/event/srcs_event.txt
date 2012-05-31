@@ -1,0 +1,9 @@
+# Sources for namespace Kore::event
+
+SET (
+	Kore_SRCS
+	${Kore_SRCS}
+	
+	${CMAKE_CURRENT_LIST_DIR}/ErrorEvent.cpp
+	${CMAKE_CURRENT_LIST_DIR}/KoreEvent.cpp
+)
