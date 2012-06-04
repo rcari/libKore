@@ -1,0 +1,7 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource prefix="/kore">
+	<file>images/icons/block.png</file>
+	<file>images/icons/library.png</file>
+	<file>images/icons/metablock.png</file>
+</qresource>
+</RCC>
