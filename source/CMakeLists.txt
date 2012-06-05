@@ -1,6 +1,8 @@
 CMAKE_MINIMUM_REQUIRED ( VERSION 2.6 )
 
-PROJECT ( Kore C CXX )
+INCLUDE( build/ModuleInfos.cmake )
+
+PROJECT ( ${MODULE_NAME} C CXX )
 
 IF( NOT QT4_FOUND )
 	# -- Qt 4.8.0 minimum --
@@ -8,8 +10,6 @@ IF( NOT QT4_FOUND )
 	# -- Activate proper modules --
 	INCLUDE( ${QT_USE_FILE} )
 ENDIF( NOT QT4_FOUND )
-
-INCLUDE( build/ModuleInfos.cmake )
 
 INCLUDE_DIRECTORIES( ${KORE_INCLUDES} )
 
