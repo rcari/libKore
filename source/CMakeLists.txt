@@ -4,12 +4,10 @@ INCLUDE( build/ModuleInfos.cmake )
 
 PROJECT ( ${MODULE_NAME} C CXX )
 
-IF( NOT QT4_FOUND )
-	# -- Qt 4.8.0 minimum --
-	FIND_PACKAGE( Qt4 4.8.0 COMPONENTS QtCore REQUIRED )
-	# -- Activate proper modules --
-	INCLUDE( ${QT_USE_FILE} )
-ENDIF( NOT QT4_FOUND )
+# -- Qt 4.8.0 minimum --
+FIND_PACKAGE( Qt4 4.8.0 COMPONENTS QtCore REQUIRED )
+# -- Activate proper modules --
+INCLUDE( ${QT_USE_FILE} )
 
 INCLUDE_DIRECTORIES( ${KORE_INCLUDES} )
 
