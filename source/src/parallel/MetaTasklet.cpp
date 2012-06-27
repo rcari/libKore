@@ -30,6 +30,8 @@
 #include <parallel/TaskletRunner.hpp>
 using namespace Kore::parallel;
 
+#include <QtCore/QtDebug>
+
 MetaTasklet::MetaTasklet(const char* taskletName, const QMetaObject* mo)
 :	Kore::data::MetaBlock(taskletName, mo)
 {
@@ -37,5 +39,9 @@ MetaTasklet::MetaTasklet(const char* taskletName, const QMetaObject* mo)
 
 void MetaTasklet::registerTaskletRunner(TaskletRunner* runner)
 {
+	int score = runner->performanceScore();
 	_runners.insert(runner->performanceScore(), runner);
+	qDebug() << "Kore / Registered tasklet runner:" << runner->runnerName()
+			<< "for Tasklet:" << MetaBlock::blockClassName()
+			<< "with score:" << score;
 }

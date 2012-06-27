@@ -38,8 +38,11 @@ using namespace Kore::event;
 using namespace Kore::parallel;
 
 #include <QtCore/QCoreApplication>
+#include <QtCore/QDateTime>
 #include <QtCore/QThread>
+
 #include <QtCore/QtConcurrentRun>
+#include <QtCore/QtDebug>
 
 /* TRANSLATOR Kore::KoreEngine */
 
@@ -51,6 +54,8 @@ KoreEngine::KoreEngine()
 	addFlag(Library::System);
 	_metaBlocks.blockName(tr("Meta Blocks"));
 	addBlock(&_metaBlocks);
+
+	qDebug() << "Kore / Starting up on" << QDateTime::currentDateTime().toString();
 }
 
 void KoreEngine::customEvent(QEvent* event)
@@ -82,11 +87,11 @@ const Library* KoreEngine::MetaBlocks()
 
 void KoreEngine::RegisterMetaBlock(MetaBlock* mb)
 {
-	//qDebug("KoreEngine / Registering meta-block %s", qPrintable(mb->blockClassName()));
 	Instance()->_metaBlocks.addBlock(mb);
 	Instance()->_metaBlocksStringHash.insert(mb->blockClassName(), mb);
 	K_ASSERT( !Instance()->_metaBlocksHashHash.contains(mb->blockClassID()) )
 	Instance()->_metaBlocksHashHash.insert(mb->blockClassID(), mb);
+	qDebug("Kore / Registered meta-block for %s", qPrintable(mb->blockClassName()));
 }
 
 Block* KoreEngine::CreateBlock(QString name)
@@ -111,7 +116,7 @@ void KoreEngine::RunTasklet(Tasklet* tasklet, TaskletRunner::RunMode mode)
 		QtConcurrent::run(runner, &TaskletRunner::run, tasklet); // Use a future, Qt ThreadPool.
 		break;
 	default:
-		qWarning("KoreEngine / Unknown running mode for tasklet %s", qPrintable(tasklet->objectClassName()));
+		qWarning("Kore / Unknown running mode for tasklet %s", qPrintable(tasklet->objectClassName()));
 		break;
 	}
 }

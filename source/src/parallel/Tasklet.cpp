@@ -34,6 +34,8 @@ using namespace Kore::parallel;
 #include <QtCore/QMutexLocker>
 #include <QtCore/QThread>
 
+/* TRANSLATOR Kore::parallel::Tasklet */
+
 namespace Kore { namespace parallel {
 
 class ProgressEvent : public QEvent
@@ -78,6 +80,11 @@ Tasklet::~Tasklet()
 	{
 		addFlag(IsBeingDeleted);
 	}
+}
+
+QString Tasklet::runnerName() const
+{
+	return tr("Default");
 }
 
 kint Tasklet::performanceScore() const

@@ -32,7 +32,6 @@ using namespace Kore::data;
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QStringList>
-//#include <QtGui/QIcon>
 
 Block::Block()
 :	_mutex(QMutex::Recursive),

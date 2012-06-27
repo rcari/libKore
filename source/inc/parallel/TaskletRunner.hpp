@@ -53,6 +53,8 @@ public:
 public:
 	virtual ~TaskletRunner();
 
+	virtual QString runnerName() const = K_NULL;
+
 	/*!
 	 * Evaluate RAW performance of this implementation for the given Tasklet.
 	 *

@@ -38,7 +38,6 @@ using namespace Kore::memory;
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QMetaMethod>
-#include <QtGui/QApplication>
 
 KoreApplication::KoreApplication(kint argc, kchar** argv)
 :	_argc(argc),
@@ -48,7 +47,7 @@ KoreApplication::KoreApplication(kint argc, kchar** argv)
 	qDebug("Kore / Loading KoreApplication");
 
 	// First, we check that Qt was properly initialized.
-	K_ASSERT( QCoreApplication::instance() != K_NULL /*|| QApplication::instance() != K_NULL*/ );
+	K_ASSERT( QCoreApplication::instance() != K_NULL );
 	// Only one Kore Application instance.
 	K_ASSERT( _Instance == K_NULL )
 
@@ -122,7 +121,7 @@ kbool KoreApplication::isClosing() const
 void KoreApplication::exit(kint exitCode)
 {
 	_closing = true;
-	QApplication::exit(exitCode);
+	QCoreApplication::exit(exitCode);
 }
 
 void KoreApplication::quit()

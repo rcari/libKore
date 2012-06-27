@@ -122,6 +122,7 @@ public:
 
 protected:
 	// Tasklet implementation !
+	virtual QString runnerName() const;
 	virtual kint performanceScore() const;
 	virtual void run(Tasklet* tasklet) const;
 
