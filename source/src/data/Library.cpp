@@ -177,14 +177,14 @@ void Library::insertBlock(Block* b, kint index)
 
 	K_ASSERT( !_blocks.contains(b) )
 
-	emit insertingBlock(index);
+	emit addingBlock(index);
 	_blocks.insert(index, b);
 	// Set the new block index first
 	b->index(index);
 	// Set its library !
 	b->library(this);
 	indexBlocks(index);
-	emit blockInserted(index);
+	emit blockAdded(index);
 }
 
 void Library::swapBlocks(Block* a, Block* b)

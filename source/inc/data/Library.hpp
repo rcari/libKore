@@ -99,8 +99,8 @@ signals:
 	void blockAdded(kint index);
 	void removingBlock(kint index);
 	void blockRemoved(kint index);
-	void insertingBlock(kint index);
-	void blockInserted(kint index);
+	/*void insertingBlock(kint index);
+	void blockInserted(kint index);*/
 	void swappingBlocks(kint index1, kint index2);
 	void blocksSwapped(kint index1, kint index2);
 	void movingBlock(kint from, kint to);
