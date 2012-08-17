@@ -43,7 +43,9 @@ class ProgressEvent : public QEvent
 public:
 	ProgressEvent(const QString& message)
 	:	QEvent((QEvent::Type)Tasklet::ProgressMessageEvent),
-	 	_message(message)
+	 	_progress(0),
+		_total(0),
+		_message(message)
 	{
 	}
 
@@ -60,9 +62,9 @@ public:
 	kuint64 total() const { return _total; }
 
 private:
-	QString _message;
 	kuint64 _progress;
 	kuint64 _total;
+	QString _message;
 };
 
 }}

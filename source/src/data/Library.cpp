@@ -180,7 +180,7 @@ void Library::swapBlocks(Block* a, Block* b)
 
 void Library::moveBlock(Block* block, kint to)
 {
-	K_ASSERT( _blocks.contains(b) )
+	K_ASSERT( _blocks.contains(block) )
 
 	kint from = block->index() == -1 ? _blocks.indexOf(block) : block->index();
 	K_ASSERT( from != -1 )

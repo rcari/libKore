@@ -153,7 +153,6 @@ void Block::blockName(const QString& name)
 
 	setObjectName(name);
 	emit blockNameChanged(name);
-	emit blockChanged();
 }
 
 QString Block::blockName() const

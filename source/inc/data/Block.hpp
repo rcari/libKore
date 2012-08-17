@@ -214,12 +214,10 @@ protected:
 	void removeFlag(kuint flag);
 
 signals:
-	void blockChanged();
 	void blockNameChanged(const QString& name);
 	void blockInserted();
 	void blockRemoved();
 	void blockDeleted();
-	void freezeChanged(kbool frozen);
 	void indexChanged(kint oldIndex, kint newIndex);
 
 public slots:

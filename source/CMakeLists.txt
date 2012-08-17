@@ -7,6 +7,7 @@ PROJECT ( ${MODULE_NAME} C CXX )
 # -- Qt 4.8.0 minimum --
 FIND_PACKAGE( Qt4 4.8.0 COMPONENTS QtCore REQUIRED )
 # -- Activate proper modules --
+SET( QT_USE_QTGUI OFF )
 INCLUDE( ${QT_USE_FILE} )
 
 INCLUDE_DIRECTORIES( ${KORE_INCLUDES} )
