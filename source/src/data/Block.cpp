@@ -34,13 +34,16 @@ using namespace Kore::data;
 #include <QtCore/QStringList>
 
 Block::Block()
-:	_mutex(QMutex::Recursive),
- 	_library(K_NULL),
-	_flags(K_NULL),
- 	_index(-1),
+:	_library(K_NULL),
  	_factory(K_NULL),
- 	_frozen(false)
+	_flags(K_NULL),
+ 	_index(-1)
 {
+}
+
+void Block::initialize()
+{
+	// TODO: Do some cache/init in here!!
 }
 
 Block::~Block()
@@ -55,7 +58,7 @@ bool Block::destroy()
 	// This block is being deleted.
 	addFlag(IsBeingDeleted);
 	// Notify our listeners.
-	notifyDeleted();
+	emit blockDeleted();
 
 	// Cleanup the connection to the library
 	if(_library)
@@ -69,14 +72,14 @@ bool Block::destroy()
 		else
 		{
 			// Announce to our listeners that we have been removed (not really but as if !)
-			notifyRemoved();
+			emit blockRemoved();
 		}
 		setParent(K_NULL); // We do not want Qt to take care of the deletion because of the factory and all.
 		_library = K_NULL;
 	}
 
 	// Cleanup!!
-	QCoreApplication::removePostedEvents(this);
+	QCoreApplication::removePostedEvents(this); // XXX: This might be useless...
 
 	// Actually destroy this thing.
 	if(_factory)
@@ -95,8 +98,6 @@ bool Block::destroy()
 
 void Block::index(kint idx)
 {
-	QMutexLocker locker(&_mutex);
-
 	if(_index != idx)
 	{
 		emit indexChanged(_index, idx);
@@ -106,7 +107,6 @@ void Block::index(kint idx)
 
 void Block::library(Library* lib)
 {
-	QMutexLocker locker(&_mutex);
 	if(_library)
 	{
 		// We test whether the Block already belongs to a Library
@@ -120,15 +120,16 @@ void Block::library(Library* lib)
 		// We set a NULL library.
 		if(lib == K_NULL)
 		{
-			notifyRemoved();
+			emit blockRemoved();
 		}
 	}
-	else if(lib) // The block had no library and is getting one: it is being inserted !
+	else if(lib)
 	{
-		notifyInserted();
+		// The block had no library and is getting one: it is being inserted !
+		emit blockInserted();
 	}
 
-	setParent(lib); // Qt threading and everything...
+	setParent(lib); // Qt threading, tree deletion and so on...
 	_library = lib;
 }
 
@@ -145,7 +146,6 @@ QString Block::objectClassName() const
 
 void Block::blockName(const QString& name)
 {
-	QMutexLocker locker(&_mutex);
 	if(objectName() == name)
 	{
 		return;
@@ -177,29 +177,12 @@ kid Block::ID() const {
 
 void Block::addFlag(kuint flag)
 {
-	QMutexLocker locker(&_mutex);
 	_flags |= flag;
 }
 
 void Block::removeFlag(kuint flag)
 {
-	QMutexLocker locker(&_mutex);
 	(_flags & flag) ? _flags ^= flag : _flags;
-}
-
-void Block::notifyInserted()
-{
-	emit blockInserted();
-}
-
-void Block::notifyRemoved()
-{
-	emit blockRemoved();
-}
-
-void Block::notifyDeleted()
-{
-	emit blockDeleted();
 }
 
 const BlockFactory* Block::factory() const
@@ -230,27 +213,12 @@ kbool Block::fastInherits(const MetaBlock* mb) const
 	return false;
 }
 
-void Block::freeze(kbool frozen)
-{
-	QMutexLocker locker(&_mutex);
-	if(frozen != _frozen)
-	{
-		_frozen = frozen;
-		emit freezeChanged(_frozen);
-	}
-}
-
-kbool Block::isFrozen() const
-{
-	return _frozen;
-}
-
 QVariant Block::DefaultBlockProperty(kint property)
 {
 	switch(property)
 	{
 	case Block::BlockTypeName:
-		return tr("Basic block");
+		return tr("Basic building block");
 	case Block::BlockPropertiesName:
 		{
 			QHash<QString,QVariant> result;

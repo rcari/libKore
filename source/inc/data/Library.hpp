@@ -74,8 +74,6 @@ public:
 	virtual void optimize();
 	void optimizeTree();
 
-	virtual void freeze(kbool frozen);
-
 	virtual kbool acceptsBlock(Block* b) const;
 	virtual void addBlock(Block* b);
 	virtual void removeBlock(Block* b);
@@ -90,9 +88,6 @@ public:
 
 protected:
 	void indexBlocks(kint startOffset = 0);
-	virtual void notifyInserted();
-	virtual void notifyRemoved();
-	virtual void notifyDeleted();
 
 signals:
 	void addingBlock(kint index);

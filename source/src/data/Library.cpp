@@ -60,8 +60,6 @@ void Library::serialize(kbool b)
 
 void Library::clear()
 {
-	QMutexLocker locker(&_mutex);
-
 	if(isEmpty())
 	{
 		return; // Nothing to clear !
@@ -99,7 +97,6 @@ kbool Library::isEmpty() const
 
 void Library::optimize()
 {
-	QMutexLocker locker(&_mutex);
 	QList<Block*> list;
 	list.reserve(_blocks.size());
 	list.append(_blocks);
@@ -120,20 +117,6 @@ void Library::optimizeTree()
 	}
 }
 
-void Library::freeze(kbool frozen)
-{
-	QMutexLocker locker(&_mutex);
-	if(_frozen != frozen)
-	{
-		_frozen = frozen;
-		emit freezeChanged(_frozen);
-		for(kint i = 0; i < _blocks.size(); i++)
-		{
-			_blocks.at(i)->freeze(_frozen);
-		}
-	}
-}
-
 kbool Library::acceptsBlock(Block* b) const
 {
 	Q_UNUSED(b);
@@ -142,8 +125,6 @@ kbool Library::acceptsBlock(Block* b) const
 
 void Library::addBlock(Block* b)
 {
-	QMutexLocker locker(&_mutex);
-
 	K_ASSERT( !_blocks.contains(b) )
 
 	const kint index = _blocks.size();
@@ -158,8 +139,6 @@ void Library::addBlock(Block* b)
 
 void Library::removeBlock(Block* b)
 {
-	QMutexLocker locker(&_mutex);
-
 	K_ASSERT( _blocks.contains(b) )
 
 	const kint index = _blocks.indexOf(b); // We cannot rely on the b->index() !
@@ -173,8 +152,6 @@ void Library::removeBlock(Block* b)
 
 void Library::insertBlock(Block* b, kint index)
 {
-	QMutexLocker locker(&_mutex);
-
 	K_ASSERT( !_blocks.contains(b) )
 
 	emit addingBlock(index);
@@ -189,8 +166,6 @@ void Library::insertBlock(Block* b, kint index)
 
 void Library::swapBlocks(Block* a, Block* b)
 {
-	QMutexLocker locker(&_mutex);
-
 	K_ASSERT( _blocks.contains(a) && _blocks.contains(b) )
 
 	emit swappingBlocks(a->index(), b->index());
@@ -205,60 +180,29 @@ void Library::swapBlocks(Block* a, Block* b)
 
 void Library::moveBlock(Block* block, kint to)
 {
-	QMutexLocker locker(&_mutex);
+	K_ASSERT( _blocks.contains(b) )
 
 	kint from = block->index() == -1 ? _blocks.indexOf(block) : block->index();
+	K_ASSERT( from != -1 )
 	K_ASSERT( _blocks.at(from) == block )
 
-	if(from != to)
+	if(from == to)
 	{
-		emit movingBlock(from, to);
-		_blocks.move(block->index(), to);
-		indexBlocks( K_MIN(from,to) );
-		emit blockMoved(from, to);
+		// No need to continue here...
+		return;
 	}
+
+	emit movingBlock(from, to);
+	_blocks.move(from, to);
+	indexBlocks( K_MIN(from,to) );
+	emit blockMoved(from, to);
 }
 
 void Library::indexBlocks(kint startOffset)
 {
-	QMutexLocker locker(&_mutex);
-	for( ; startOffset < _blocks.size(); startOffset++) {
+	for( ; startOffset < _blocks.size(); startOffset++)
+	{
 		_blocks.at(startOffset)->index(startOffset);
-	}
-}
-
-void Library::notifyInserted()
-{
-	Block::notifyInserted();
-	// Recursive calls to alert all observers of the subtree.
-	for(int i = 0; i < _blocks.size(); i++)
-	{
-		_blocks.at(i)->notifyInserted();
-	}
-}
-
-void Library::notifyRemoved()
-{
-	Block::notifyRemoved();
-	// Recursive calls to alert all observers of the subtree.
-	for(int i = 0; i < _blocks.size(); i++)
-	{
-		_blocks.at(i)->notifyRemoved();
-	}
-}
-
-void Library::notifyDeleted()
-{
-	Block::notifyDeleted();
-	// Recursive calls to alert all observers of the subtree.
-	if(checkFlag(IsBeingDeleted))
-	{
-		return; // No further processing, the child blocks will be deleted for real and the signal will be emitted !
-	}
-
-	for(int i = 0; i < _blocks.size(); i++)
-	{
-		_blocks.at(i)->notifyDeleted();
 	}
 }
 

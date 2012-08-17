@@ -75,16 +75,16 @@ Tasklet::Tasklet(kbool autoDelete)
 
 Tasklet::~Tasklet()
 {
-	// The Tasklet was created on the stack !
 	if(!checkFlag(IsBeingDeleted))
 	{
+		// The Tasklet was created on the stack ! // ???? What is that for :/
 		addFlag(IsBeingDeleted);
 	}
 }
 
 QString Tasklet::runnerName() const
 {
-	return tr("Default");
+	return tr("Undefined Tasklet runner...");
 }
 
 kint Tasklet::performanceScore() const
@@ -94,7 +94,7 @@ kint Tasklet::performanceScore() const
 
 void Tasklet::run(Tasklet*) const
 {
-	qWarning("The tasklet %s has no default implementation !", qPrintable(objectClassName()));
+	qWarning("The Tasklet %s has no default implementation !", qPrintable(objectClassName()));
 }
 
 kbool Tasklet::waitForFinished(kulong timeout)
@@ -175,8 +175,6 @@ void Tasklet::runnerStarted()
 {
 	_state = Running;
 
-	// The calling thread locks the Tasklet.
-	mutex()->lock();
 	_waitMutex.lock();
 
 	if(this->thread() == QThread::currentThread())
@@ -199,13 +197,12 @@ void Tasklet::runnerCanceled()
 	}
 	else
 	{
-		_state = Canceled;
+		_state = Canceled; // Update right away (because of the wait condition)
 		QCoreApplication::postEvent(this, new QEvent((QEvent::Type)CanceledEvent), Qt::HighEventPriority);
-		_waitForFinished.wakeAll();
+		_waitForFinished.wakeOne();
 	}
 	// Release the lock on the Tasklet.
 	_waitMutex.unlock();
-	mutex()->unlock();
 }
 
 void Tasklet::runnerFailed()
@@ -217,13 +214,12 @@ void Tasklet::runnerFailed()
 	}
 	else
 	{
-		_state = Failed;
+		_state = Failed; // Update right away (because of the wait condition)
 		QCoreApplication::postEvent(this, new QEvent((QEvent::Type)FailedEvent), Qt::HighEventPriority);
-		_waitForFinished.wakeAll();
+		_waitForFinished.wakeOne();
 	}
 	// Release the lock on the Tasklet.
 	_waitMutex.unlock();
-	mutex()->unlock();
 }
 
 void Tasklet::runnerCompleted()
@@ -235,13 +231,12 @@ void Tasklet::runnerCompleted()
 	}
 	else
 	{
-		_state = Completed;
+		_state = Completed; // Update right away (because of the wait condition)
 		QCoreApplication::postEvent(this, new QEvent((QEvent::Type)CompletedEvent), Qt::HighEventPriority);
-		_waitForFinished.wakeAll();
+		_waitForFinished.wakeOne();
 	}
 	// Release the lock on the Tasklet.
 	_waitMutex.unlock();
-	mutex()->unlock();
 }
 
 void Tasklet::runnerProgress(const QString& message)

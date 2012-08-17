@@ -32,8 +32,6 @@
 #include <Types.hpp>
 #include <data/PointerTypes.hpp>
 
-#include <QtCore/QMutex>
-#include <QtCore/QMutexLocker>
 #include <QtCore/QObject>
 #include <QtCore/QVariant>
 
@@ -58,7 +56,6 @@ class KoreExport Block : public QObject
 
 	Q_OBJECT
 	Q_PROPERTY( QString blockName READ blockName WRITE blockName NOTIFY blockNameChanged STORED false DESIGNABLE false USER true )
-	Q_PROPERTY( bool frozen READ isFrozen WRITE freeze NOTIFY freezeChanged STORED true DESIGNABLE false )
 
 	friend class BlockFactory;
 	friend class Library;
@@ -97,6 +94,14 @@ protected:
 	 * sub-classed and specialized.
 	 */
 	Block();
+	/*!
+	 * @brief	Initialization routine.
+	 *
+	 * Because some generic initialization is not possible in the base constructor (the object is not fully built),
+	 * this virtual method call allows to do some generic post instantiation initialization. All overrides must call
+	 * the base implementation.
+	 */
+	virtual void initialize();
 
 public:
 	virtual ~Block();
@@ -115,6 +120,10 @@ protected:
 	 * @brief		The library is the parent node of this Block.
 	 */
 protected:
+	/*!
+	 * Classes that inherit Block can customize the behavior upon insertion/removal of a tree
+	 * hierarchy by customizing this method.
+	 */
 	virtual void library(Library* lib);
 public:
 	inline Library* library() { return _library; }
@@ -130,7 +139,6 @@ public:
 	 *
 	 * Block trees sometimes need to be optimized for performance or memory footprint.
 	 * This virtual method is where these optimizations should be implemented.
-	 *
 	 */
 	virtual void optimize();
 
@@ -162,7 +170,7 @@ public:
 	kid ID() const;
 
 	virtual kbool isLibrary() const { return false; }
-	inline kbool isBeingDeleted() const { return _flags & IsBeingDeleted; }
+	inline kbool isBeingDeleted() const { return checkFlag(IsBeingDeleted); }
 
 	/*!
 	 * @brief	The Block's instantiator.
@@ -187,12 +195,6 @@ public:
 
 	kbool fastInherits(const MetaBlock* mb) const;
 
-	virtual void freeze(kbool frozen);
-	kbool isFrozen() const;
-
-	inline QMutex* mutex() { return &_mutex; }
-	inline QMutex* mutex() const { return const_cast<Block*>(this)->mutex(); }
-
 protected:
 	/*!
 	 * @brief	Adds a flag to the Block.
@@ -210,10 +212,6 @@ protected:
 	 * @param[in] flag	Flag to be removed.
 	 */
 	void removeFlag(kuint flag);
-
-	virtual void notifyInserted();
-	virtual void notifyRemoved();
-	virtual void notifyDeleted();
 
 signals:
 	void blockChanged();
@@ -234,12 +232,12 @@ public:
 	static QVariant DefaultBlockProperty(kint property);
 
 private:
-	QMutex				_mutex;
-	Library*			_library;
-	kuint 				_flags;
-	kint 				_index; // Index of this Block in its Library.
-	const BlockFactory*	_factory; // Factory of this Block.
-	kbool				_frozen;
+	// Better alignment: pointers first (32/64...)
+	Library*			_library;	//! The parent library // XXX: This is useless, we should use the QObject::parent() instead...
+	const BlockFactory*	_factory;	//! Factory of this Block, in charge of deletion
+	// Members afterwards
+	kuint 				_flags;		//!	The block flags
+	kint 				_index;		//! The block Index of this Block in its Library.
 };
 
 } /* namespace data */ } /* namespace Kore */

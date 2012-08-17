@@ -78,6 +78,7 @@ class KoreExport Tasklet
 
 	/*!
 	 * Custom events for a Tasklet.
+	 * XXX: Should be moved to the private section...
 	 */
 	enum Events
 	{
@@ -92,7 +93,8 @@ class KoreExport Tasklet
 protected:
 	enum Flags
 	{
-		Cancellable = Block::MAX_FLAG,
+		Cancellable =	Block::MAX_FLAG,
+		MAX_FLAG =		(Block::MAX_FLAG << 1),
 	};
 
 public:
@@ -232,7 +234,7 @@ public:
 
 private:
 	kbool _autoDelete;
-	State _state;
+	volatile State _state;
 	QMutex _waitMutex;
 	QWaitCondition _waitForFinished;
 };
