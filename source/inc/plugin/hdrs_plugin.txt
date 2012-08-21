@@ -4,6 +4,7 @@ SET (
 	Kore_MOC_HDRS
 	${Kore_MOC_HDRS}
 	
+	${CMAKE_CURRENT_LIST_DIR}/Module.hpp
 	${CMAKE_CURRENT_LIST_DIR}/PluginsManager.hpp
 )
 

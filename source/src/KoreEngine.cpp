@@ -37,6 +37,9 @@ using namespace Kore::event;
 #include <parallel/Tasklet.hpp>
 using namespace Kore::parallel;
 
+#include <plugin/Module.hpp>
+using namespace Kore::plugin;
+
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDateTime>
 #include <QtCore/QThread>
@@ -85,9 +88,15 @@ const Library* KoreEngine::MetaBlocks()
 	return &Instance()->_metaBlocks;
 }
 
+void KoreEngine::RegisterModule(Kore::plugin::Module* module)
+{
+	Instance()->_modules.addBlock(module);
+	qDebug("Kore / Registered module %s (%s)", qPrintable(module->name()), qPrintable(module->version()));
+}
+
 void KoreEngine::RegisterMetaBlock(MetaBlock* mb)
 {
-	Instance()->_metaBlocks.addBlock(mb);
+	Instance()->_metaBlocks.addBlock(mb); // TODO: Remove this, the MetaBlocks belong to their module!
 	Instance()->_metaBlocksStringHash.insert(mb->blockClassName(), mb);
 	K_ASSERT( !Instance()->_metaBlocksHashHash.contains(mb->blockClassID()) )
 	Instance()->_metaBlocksHashHash.insert(mb->blockClassID(), mb);

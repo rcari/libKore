@@ -53,6 +53,7 @@ public:
 	MetaBlock(const char* className, const QMetaObject* mo);
 	MetaBlock(const char* className, const QMetaObject* mo, MetaBlock* superMetaBlock);
 
+	virtual bool canDestroy();
 	virtual bool destroy();
 
 	virtual QString iconPath() const;

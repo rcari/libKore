@@ -112,6 +112,11 @@ void MetaBlock::createPropertiesCache() const
 	}
 }
 
+bool MetaBlock::canDestroy()
+{
+	return true; // TODO: Implement proper reference counting of instantiated blocks...
+}
+
 bool MetaBlock::destroy()
 {
 	// A Meta-Block can not be destroyed !

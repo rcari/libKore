@@ -30,12 +30,14 @@
 
 #include <KoreExport.hpp>
 
-#include <data/Library.hpp>
+#include <data/LibraryT.hpp>
 #include <parallel/TaskletRunner.hpp>
 
 #include <QtCore/QHash>
 
 namespace Kore {
+
+namespace plugin { class Module; }
 
 class KoreApplication;
 
@@ -56,6 +58,7 @@ signals:
 
 public:
 	static const Library* MetaBlocks();
+	static void RegisterModule(Kore::plugin::Module* module);
 	static void RegisterMetaBlock(Kore::data::MetaBlock* mb);
 	static Kore::data::Block* CreateBlock(QString name);
 
@@ -74,6 +77,7 @@ public:
 	static KoreEngine* Instance();
 
 private:
+	Kore::data::LibraryT<Kore::plugin::Module> _modules;
 	Kore::data::Library _metaBlocks;
 	QHash<QString,Kore::data::MetaBlock*> _metaBlocksStringHash;
 	QHash<khash,Kore::data::MetaBlock*> _metaBlocksHashHash;
