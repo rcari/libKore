@@ -34,10 +34,6 @@
 
 #include "KoreEngine.hpp"
 
-// Utilities
-#define K_BLOCK_STR( x ) #x
-#define K_BLOCK_XSTR( x ) K_BLOCK_STR( x )
-
 // Begin / End blocks !
 #ifdef K_BLOCK_SUPER_TYPE
 

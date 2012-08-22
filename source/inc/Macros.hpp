@@ -34,6 +34,10 @@
 #define _K_SAFE_BUILD
 #endif /*_DEBUG*/
 
+// Utilities
+#define K_BLOCK_STR( x ) #x
+#define K_BLOCK_XSTR( x ) K_BLOCK_STR( x )
+
 /* Assert */
 #ifdef K_DEBUG
 #define K_ASSERT( expression )					assert( expression );

@@ -1,5 +1,5 @@
 /*
- * 	Copyright (c) 2010-2014, Romuald CARI
+ * 	Copyright (c) 2010-2011, Romuald CARI
  *	All rights reserved.
  *
  *	Redistribution and use in source and binary forms, with or without
@@ -9,14 +9,14 @@
  *		* Redistributions in binary form must reproduce the above copyright
  *		  notice, this list of conditions and the following disclaimer in the
  *		  documentation and/or other materials provided with the distribution.
- *		* Neither the name of the Moving Pixels Labs nor the
+ *		* Neither the name of the <organization> nor the
  *		  names of its contributors may be used to endorse or promote products
  *		  derived from this software without specific prior written permission.
  *
  *	THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  *	ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  *	WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- *	DISCLAIMED. IN NO EVENT SHALL Romuald CARI BE LIABLE FOR ANY
+ *	DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE FOR ANY
  *	DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
  *	(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
  *	LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
@@ -26,49 +26,30 @@
  *
  */
 
-#pragma once
+#include <KoreModule.hpp>
+using namespace Kore;
+using namespace Kore::plugin;
 
-#include <data/LibraryT.hpp>
-#include <data/MetaBlock.hpp>
-#include <QtCore/QLinkedList>
+#define K_MODULE_NAME Kore::KoreModule
+#include <ModuleMacros.hpp>
+K_MODULE_IMPL
 
-namespace Kore { namespace plugin {
-
-class KoreExport Module : public Kore::data::LibraryT<Kore::data::MetaBlock>
+QString KoreModule::name() const
 {
-	Q_OBJECT
+	return QLatin1String("libKore");
+}
 
-	Q_PROPERTY( QString name READ name DESIGNABLE true USER true )
-	Q_PROPERTY( QString author READ author DESIGNABLE true )
-	Q_PROPERTY( QString url READ url DESIGNABLE true )
-	Q_PROPERTY( QString version READ version DESIGNABLE true )
+QString KoreModule::version() const
+{
+	return QLatin1String(_KORE_VERSION);
+}
 
-public:
-	typedef Kore::data::MetaBlock* (*MetaBlockInstantiator)();
+QString KoreModule::author() const
+{
+	return QLatin1String("Moving Pixels Labs");
+}
 
-protected:
-	Module();
-
-public:
-	kbool load();
-	kbool unload();
-
-public:
-	virtual QString name() const = 0;
-	virtual QString author() const = 0;
-	virtual QString url() const = 0;
-	virtual QString version() const = 0;
-
-private:
-	void registerMetaBlockInstantiator(MetaBlockInstantiator instantiator);
-	QLinkedList<MetaBlockInstantiator> _instantiators;
-};
-
-}}
-
-#define K_MODULE friend class Kore::data::MetaBlock;\
-	public:\
-		static const Kore::plugin::Module* Instance();\
-	private:\
-		static Kore::plugin::Module* PrivateInstance();\
-		static Kore::plugin::Module* _Instance;
+QString KoreModule::url() const
+{
+	return QLatin1String("http://mp-labs.net");
+}

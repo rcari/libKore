@@ -38,7 +38,7 @@ SimpleMemoryManager::SimpleMemoryManager()
 	qDebug("Kore / Created Simple Memory Manager");
 	blockName("Simple Memory Manager");
 	removeFlag(Block::Serializable); // A memory manager is not serializable.
-	addFlag(Block::SystemOwned);
+	addFlag(Block::System);
 }
 
 void* SimpleMemoryManager::mAlloc(ksize sz) const

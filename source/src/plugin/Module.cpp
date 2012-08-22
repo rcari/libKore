@@ -32,6 +32,7 @@ using namespace Kore::plugin;
 
 Module::Module()
 {
+	addFlag(System);
 }
 
 void Module::registerMetaBlockInstantiator(MetaBlockInstantiator instantiator)

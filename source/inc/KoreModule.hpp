@@ -28,47 +28,19 @@
 
 #pragma once
 
-#include <data/LibraryT.hpp>
-#include <data/MetaBlock.hpp>
-#include <QtCore/QLinkedList>
+#include <plugin/Module.hpp>
 
-namespace Kore { namespace plugin {
+namespace Kore {
 
-class KoreExport Module : public Kore::data::LibraryT<Kore::data::MetaBlock>
+class KoreModule : public Kore::plugin::Module
 {
-	Q_OBJECT
-
-	Q_PROPERTY( QString name READ name DESIGNABLE true USER true )
-	Q_PROPERTY( QString author READ author DESIGNABLE true )
-	Q_PROPERTY( QString url READ url DESIGNABLE true )
-	Q_PROPERTY( QString version READ version DESIGNABLE true )
+	K_MODULE
 
 public:
-	typedef Kore::data::MetaBlock* (*MetaBlockInstantiator)();
-
-protected:
-	Module();
-
-public:
-	kbool load();
-	kbool unload();
-
-public:
-	virtual QString name() const = 0;
-	virtual QString author() const = 0;
-	virtual QString url() const = 0;
-	virtual QString version() const = 0;
-
-private:
-	void registerMetaBlockInstantiator(MetaBlockInstantiator instantiator);
-	QLinkedList<MetaBlockInstantiator> _instantiators;
+	virtual QString name() const;
+	virtual QString author() const;
+	virtual QString url() const;
+	virtual QString version() const;
 };
 
-}}
-
-#define K_MODULE friend class Kore::data::MetaBlock;\
-	public:\
-		static const Kore::plugin::Module* Instance();\
-	private:\
-		static Kore::plugin::Module* PrivateInstance();\
-		static Kore::plugin::Module* _Instance;
+}

@@ -18,6 +18,7 @@ SET (
 	
 	src/KoreApplication.cpp
 	src/KoreEngine.cpp
+	src/KoreModule.cpp
 )
 
 INCLUDE ( src/data/srcs_data.txt )
@@ -36,6 +37,7 @@ SET (
 	inc/Macros.hpp
 	inc/Types.hpp
 	inc/KoreExport.hpp
+	inc/KoreModule.hpp
 )
 
 # Visual Studio compiler specifics

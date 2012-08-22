@@ -204,9 +204,13 @@ BlockInflater::InflationResult KoreV1::inflate(QIODevice* device, Kore::data::Bl
 	for(kuint i = 0; i < header.childrenNb; i++)
 	{
 		Block* childBlock = K_NULL;
-		if(inflate(device, &childBlock, callback) == BlockInflater::Failed)
+		if(inflate(device, &childBlock, callback) == BlockInflater::Failed) // TODO: Check for the Canceled case!
 		{
 			qWarning("Failed to add child %d to Block %s", i, qPrintable((*block)->blockName()));
+			if(childBlock)
+			{
+				delete childBlock;
+			}
 			return BlockInflater::Failed;
 		}
 		static_cast<Library*>(*block)->addBlock(childBlock);

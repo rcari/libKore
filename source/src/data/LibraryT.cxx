@@ -29,7 +29,7 @@
 using namespace Kore::data;
 
 template<typename T>
-LibraryT<T>::LibraryT() : Library() {
+LibraryT<T>::LibraryT(kuint extraFlags) : Library(extraFlags) {
 
 }
 

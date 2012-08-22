@@ -50,11 +50,16 @@ using namespace Kore::plugin;
 /* TRANSLATOR Kore::KoreEngine */
 
 KoreEngine::KoreEngine()
-:	_metaBlocks(Block::SystemOwned)
+:	_modules(Block::SystemOwned),
+ 	_metaBlocks(Block::SystemOwned)
 {
 	blockName(tr("Kore Engine"));
 	K_ASSERT( _Instance == K_NULL )
 	addFlag(Library::System);
+
+	_modules.blockName(tr("Modules"));
+	addBlock(&_modules);
+
 	_metaBlocks.blockName(tr("Meta Blocks"));
 	addBlock(&_metaBlocks);
 
