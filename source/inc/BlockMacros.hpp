@@ -28,6 +28,10 @@
 
 #pragma once
 
+#ifndef K_MODULE_TYPE
+#error You must define a module type !
+#endif
+
 #ifndef K_BLOCK_TYPE
 #error You must define a block type before include <BlockMacros.hpp> !
 #endif
@@ -36,18 +40,13 @@
 
 // Begin / End blocks !
 #ifdef K_BLOCK_SUPER_TYPE
-
-# define K_BLOCK_BEGIN K_BLOCK_TYPE::PrivateMetaBlock::PrivateMetaBlock() : MetaBlock( K_BLOCK_XSTR(K_BLOCK_TYPE) , &(K_BLOCK_TYPE::staticMetaObject), K_BLOCK_SUPER_TYPE::StaticMetaBlock() ) { Kore::KoreEngine::RegisterMetaBlock( this ); }\
-	ksize K_BLOCK_TYPE::PrivateMetaBlock::blockSize() const { return sizeof(K_BLOCK_TYPE); }\
-	K_BLOCK_TYPE::PrivateMetaBlock* K_BLOCK_TYPE::PrivateMetaBlock::_Instance = K_BLOCK_TYPE::PrivateMetaBlock::Instance();
-
-#else
-
-# define K_BLOCK_BEGIN K_BLOCK_TYPE::PrivateMetaBlock::PrivateMetaBlock() : MetaBlock( K_BLOCK_XSTR(K_BLOCK_TYPE) , &(K_BLOCK_TYPE::staticMetaObject)) { Kore::KoreEngine::RegisterMetaBlock( this ); }\
-	ksize K_BLOCK_TYPE::PrivateMetaBlock::blockSize() const { return sizeof(K_BLOCK_TYPE); }\
-	K_BLOCK_TYPE::PrivateMetaBlock* K_BLOCK_TYPE::PrivateMetaBlock::_Instance = K_BLOCK_TYPE::PrivateMetaBlock::Instance();
-
+//#warning Defining the block super type is useless now ! // Not entirely true...
 #endif
+
+#define K_BLOCK_BEGIN K_BLOCK_TYPE::PrivateMetaBlock::PrivateMetaBlock() : MetaBlock( K_BLOCK_XSTR(K_BLOCK_TYPE) , &(K_BLOCK_TYPE::staticMetaObject)) {}\
+	ksize K_BLOCK_TYPE::PrivateMetaBlock::blockSize() const { return sizeof(K_BLOCK_TYPE); }\
+	K_BLOCK_TYPE::PrivateMetaBlock* K_BLOCK_TYPE::PrivateMetaBlock::_Instance = NULL;\
+	bool K_BLOCK_TYPE::PrivateMetaBlock::_Registered = K_MODULE_TYPE::RegisterMetaBlockInstantiator( &(K_BLOCK_TYPE::StaticMetaBlock) );
 
 #define K_BLOCK_END
 

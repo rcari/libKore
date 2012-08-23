@@ -48,16 +48,6 @@ MetaBlock::MetaBlock(const char* className, const QMetaObject* mo)
 	_blockClassID = qHash( QByteArray::fromRawData( className, strlen(className)) );
 }
 
-MetaBlock::MetaBlock(const char* className, const QMetaObject* mo, MetaBlock* superMetaBlock)
-:	_blockMetaObject(mo),
-	_superMetaBlock(superMetaBlock),
-	_blockClassID(K_NULL)
-{
-	blockName( className );
-	addFlag(System);
-	_blockClassID = qHash( QByteArray::fromRawData( className, strlen(className)) );
-}
-
 void MetaBlock::library(Library* lib)
 {
 	Block::library(lib);
@@ -114,7 +104,7 @@ void MetaBlock::createPropertiesCache() const
 
 bool MetaBlock::canDestroy()
 {
-	return true; // TODO: Implement proper reference counting of instantiated blocks...
+	return _instancesCount == 0;
 }
 
 bool MetaBlock::destroy()

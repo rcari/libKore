@@ -29,6 +29,8 @@
 #include <data/Library.hpp>
 using namespace Kore::data;
 
+#include <KoreModule.hpp>
+
 #define K_BLOCK_TYPE Kore::data::Library
 #include <BlockMacros.hpp>
 K_BLOCK_BEGIN

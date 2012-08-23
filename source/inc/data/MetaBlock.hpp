@@ -33,6 +33,7 @@
 #include "Block.hpp"
 #include "BlockFactory.hpp"
 
+#include <QtCore/QAtomicInt>
 #include <QtCore/QMetaClassInfo>
 #include <QtCore/QMetaObject>
 #include <QtCore/QMetaProperty>
@@ -49,10 +50,10 @@ class KoreExport MetaBlock : public Block, public BlockFactory {
 	friend class Block;
 	friend class BlockExtension;
 
-public:
+protected:
 	MetaBlock(const char* className, const QMetaObject* mo);
-	MetaBlock(const char* className, const QMetaObject* mo, MetaBlock* superMetaBlock);
 
+public:
 	virtual bool canDestroy();
 	virtual bool destroy();
 
@@ -115,6 +116,7 @@ private:
 	mutable khash _blockClassID;
 	mutable QVector<khash> _propertiesHashes;
 
+	QAtomicInt _instancesCount;
 	QMultiHash<QString,BlockExtension*> _extensions;
 };
 

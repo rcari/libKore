@@ -261,6 +261,7 @@ private:
 		static PrivateMetaBlock* Instance() { return (_Instance != K_NULL) ? _Instance : _Instance = new PrivateMetaBlock(); }\
 	private:\
 		static PrivateMetaBlock* _Instance;\
+		static bool _Registered;\
 	};\
 	public:\
 		static Kore::data::MetaBlock* StaticMetaBlock() { return PrivateMetaBlock::Instance(); }\

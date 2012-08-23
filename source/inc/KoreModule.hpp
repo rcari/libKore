@@ -44,3 +44,6 @@ public:
 };
 
 }
+
+#define K_MODULE_TYPE Kore::KoreModule
+#include <ModuleMacros.hpp>

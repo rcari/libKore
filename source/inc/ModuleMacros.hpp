@@ -28,19 +28,18 @@
 
 #pragma once
 
-#ifndef K_MODULE_NAME
+#ifndef K_MODULE_TYPE
 #error You must define a module name before including <ModuleMacros.hpp> !
 #endif
 
 #include <KoreEngine.hpp>
 
-#define K_MODULE_INSTANCE K_MODULE_NAME ::Instance()
-
-#define K_MODULE_IMPL Kore::plugin::Module* K_MODULE_NAME::_Instance = K_MODULE_NAME::PrivateInstance();\
-	const Kore::plugin::Module* K_MODULE_NAME::Instance() { return Instance(); }
-	Kore::plugin::Module* K_MODULE_NAME::PrivateInstance()\
+#define K_MODULE_IMPL Kore::plugin::Module* K_MODULE_TYPE::_Instance = K_MODULE_TYPE::PrivateInstance();\
+	const Kore::plugin::Module* K_MODULE_TYPE::Instance() { return Instance(); }\
+	bool K_MODULE_TYPE::RegisterMetaBlockInstantiator(MetaBlockInstantiator instantiator) { PrivateInstance()->registerMetaBlockInstantiator(instantiator); return true; }\
+	Kore::plugin::Module* K_MODULE_TYPE::PrivateInstance()\
 	{\
 		if(_Instance == K_NULL)\
-			{ Kore::plugin::Module* m = new K_MODULE_NAME; Kore::KoreEngine::RegisterModule(m); return m; }\
+			{ Kore::plugin::Module* m = new K_MODULE_TYPE; Kore::KoreEngine::RegisterModule(m); return m; }\
 		return _Instance;\
 	}

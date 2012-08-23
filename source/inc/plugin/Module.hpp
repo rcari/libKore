@@ -59,8 +59,9 @@ public:
 	virtual QString url() const = 0;
 	virtual QString version() const = 0;
 
-private:
 	void registerMetaBlockInstantiator(MetaBlockInstantiator instantiator);
+
+private:
 	QLinkedList<MetaBlockInstantiator> _instantiators;
 };
 
@@ -69,6 +70,7 @@ private:
 #define K_MODULE friend class Kore::data::MetaBlock;\
 	public:\
 		static const Kore::plugin::Module* Instance();\
+		static bool RegisterMetaBlockInstantiator(MetaBlockInstantiator instantiator);\
 	private:\
 		static Kore::plugin::Module* PrivateInstance();\
 		static Kore::plugin::Module* _Instance;

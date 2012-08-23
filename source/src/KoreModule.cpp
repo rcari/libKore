@@ -30,8 +30,6 @@
 using namespace Kore;
 using namespace Kore::plugin;
 
-#define K_MODULE_NAME Kore::KoreModule
-#include <ModuleMacros.hpp>
 K_MODULE_IMPL
 
 QString KoreModule::name() const
