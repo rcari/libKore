@@ -57,9 +57,10 @@ signals:
 	void error(QString error, QString details);
 
 public:
-	static const Library* MetaBlocks();
+	static const QList<Kore::data::MetaBlock*> MetaBlocks();
 	static void RegisterModule(Kore::plugin::Module* module);
 	static void RegisterMetaBlock(Kore::data::MetaBlock* mb);
+	static void UnregisterMetaBlock(Kore::data::MetaBlock* mb);
 	static Kore::data::Block* CreateBlock(QString name);
 
 	template<typename T>
@@ -78,7 +79,6 @@ public:
 
 private:
 	Kore::data::LibraryT<Kore::plugin::Module> _modules;
-	Kore::data::Library _metaBlocks;
 	QHash<QString,Kore::data::MetaBlock*> _metaBlocksStringHash;
 	QHash<khash,Kore::data::MetaBlock*> _metaBlocksHashHash;
 

@@ -38,7 +38,7 @@ class KoreExport Module : public Kore::data::LibraryT<Kore::data::MetaBlock>
 {
 	Q_OBJECT
 
-	Q_PROPERTY( QString name READ name DESIGNABLE true USER true )
+	Q_PROPERTY( QString name READ name DESIGNABLE true )
 	Q_PROPERTY( QString author READ author DESIGNABLE true )
 	Q_PROPERTY( QString url READ url DESIGNABLE true )
 	Q_PROPERTY( QString version READ version DESIGNABLE true )

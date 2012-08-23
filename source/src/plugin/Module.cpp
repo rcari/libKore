@@ -42,6 +42,7 @@ void Module::registerMetaBlockInstantiator(MetaBlockInstantiator instantiator)
 
 bool Module::load()
 {
+	blockName( name() );
 	while(!_instantiators.empty())
 	{
 		MetaBlockInstantiator inst = _instantiators.takeFirst();

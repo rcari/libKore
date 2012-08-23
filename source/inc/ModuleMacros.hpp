@@ -35,11 +35,11 @@
 #include <KoreEngine.hpp>
 
 #define K_MODULE_IMPL Kore::plugin::Module* K_MODULE_TYPE::_Instance = K_MODULE_TYPE::PrivateInstance();\
-	const Kore::plugin::Module* K_MODULE_TYPE::Instance() { return Instance(); }\
+	const Kore::plugin::Module* K_MODULE_TYPE::Instance() { return PrivateInstance(); }\
 	bool K_MODULE_TYPE::RegisterMetaBlockInstantiator(MetaBlockInstantiator instantiator) { PrivateInstance()->registerMetaBlockInstantiator(instantiator); return true; }\
 	Kore::plugin::Module* K_MODULE_TYPE::PrivateInstance()\
 	{\
 		if(_Instance == K_NULL)\
-			{ Kore::plugin::Module* m = new K_MODULE_TYPE; Kore::KoreEngine::RegisterModule(m); return m; }\
+			{ _Instance = new K_MODULE_TYPE; Kore::KoreEngine::RegisterModule(_Instance); }\
 		return _Instance;\
 	}

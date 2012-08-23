@@ -260,10 +260,11 @@ private:
 		static PrivateMetaTasklet* Instance() { return (_Instance != K_NULL) ? _Instance : _Instance = new PrivateMetaTasklet(); }\
 	private:\
 		static PrivateMetaTasklet* _Instance;\
+		static bool _Registered;\
 	};\
 	public:\
-		inline static const Kore::data::MetaBlock* StaticMetaBlock() { return PrivateMetaTasklet::Instance(); }\
-		virtual const Kore::data::MetaBlock* metaBlock() const { return PrivateMetaTasklet::Instance(); }\
+		inline static Kore::data::MetaBlock* StaticMetaBlock() { return PrivateMetaTasklet::Instance(); }\
+		virtual Kore::data::MetaBlock* metaBlock() const { return PrivateMetaTasklet::Instance(); }\
 		inline static const Kore::parallel::MetaTasklet* StaticMetaTasklet() { return PrivateMetaTasklet::Instance(); }\
 		virtual const Kore::parallel::MetaTasklet* metaTasklet() const { return PrivateMetaTasklet::Instance(); }\
 	private:

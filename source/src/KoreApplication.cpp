@@ -28,6 +28,7 @@
 
 #include <KoreApplication.hpp>
 #include <KoreEngine.hpp>
+#include <KoreModule.hpp>
 using namespace Kore;
 
 #include <data/Library.hpp>
@@ -70,6 +71,9 @@ KoreApplication::KoreApplication(kint argc, kchar** argv)
 
 	// Register the memory manager.
 	appLib->addBlock(_memoryManager);
+
+	// Load the module
+	KoreModule::PrivateInstance()->load();
 
 	// Create the library that will hold the application data.
 	_dataLibrary = new Library(Block::System);

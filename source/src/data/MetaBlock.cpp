@@ -51,10 +51,16 @@ MetaBlock::MetaBlock(const char* className, const QMetaObject* mo)
 void MetaBlock::library(Library* lib)
 {
 	Block::library(lib);
-	// The MetaBlock comes from a plugin or sth, we should create its properties cache.
-	if(lib != K_NULL && kApp != K_NULL)
+
+	if(hasParent())
 	{
-		createPropertiesCache();
+		Kore::KoreEngine::RegisterMetaBlock(this);
+		createPropertiesCache(); // The metablock is fully built now!
+	}
+	else
+	{
+		clearExtensions();
+		Kore::KoreEngine::UnregisterMetaBlock(this);
 	}
 }
 
@@ -102,18 +108,27 @@ void MetaBlock::createPropertiesCache() const
 	}
 }
 
+void MetaBlock::clearExtensions()
+{
+	QList<BlockExtension*> extensions = _extensions.values();
+	for(int i = 0; i < extensions.size(); i++)
+	{
+		extensions.at(i)->unregisterWithMetaBlock(this);
+	}
+}
+
 bool MetaBlock::canDestroy()
 {
 	return _instancesCount == 0;
 }
 
-bool MetaBlock::destroy()
+/*bool MetaBlock::destroy()
 {
 	// A Meta-Block can not be destroyed !
 	// It will be cleared when the process will terminate.
 	setParent(K_NULL); // Remove from the Qt tree for deletion !
 	return false;
-}
+}*/
 
 QString MetaBlock::iconPath() const
 {

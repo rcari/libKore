@@ -50,20 +50,15 @@ using namespace Kore::plugin;
 /* TRANSLATOR Kore::KoreEngine */
 
 KoreEngine::KoreEngine()
-:	_modules(Block::SystemOwned),
- 	_metaBlocks(Block::SystemOwned)
+:	_modules(Block::SystemOwned)
 {
+	qDebug() << "Kore / Starting up on" << QDateTime::currentDateTime().toString();
+
 	blockName(tr("Kore Engine"));
 	K_ASSERT( _Instance == K_NULL )
-	addFlag(Library::System);
 
 	_modules.blockName(tr("Modules"));
 	addBlock(&_modules);
-
-	_metaBlocks.blockName(tr("Meta Blocks"));
-	addBlock(&_metaBlocks);
-
-	qDebug() << "Kore / Starting up on" << QDateTime::currentDateTime().toString();
 }
 
 void KoreEngine::customEvent(QEvent* event)
@@ -88,9 +83,9 @@ void KoreEngine::customEvent(QEvent* event)
 	}
 }
 
-const Library* KoreEngine::MetaBlocks()
+const QList<MetaBlock*> KoreEngine::MetaBlocks()
 {
-	return &Instance()->_metaBlocks;
+	return Instance()->_metaBlocksHashHash.values();
 }
 
 void KoreEngine::RegisterModule(Kore::plugin::Module* module)
@@ -101,11 +96,19 @@ void KoreEngine::RegisterModule(Kore::plugin::Module* module)
 
 void KoreEngine::RegisterMetaBlock(MetaBlock* mb)
 {
-	Instance()->_metaBlocks.addBlock(mb); // TODO: Remove this, the MetaBlocks belong to their module!
+	//Instance()->_metaBlocks.addBlock(mb); // TODO: Remove this, the MetaBlocks belong to their module!
+	K_ASSERT( !Instance()->_metaBlocksStringHash.contains(mb->blockClassName()) )
 	Instance()->_metaBlocksStringHash.insert(mb->blockClassName(), mb);
 	K_ASSERT( !Instance()->_metaBlocksHashHash.contains(mb->blockClassID()) )
 	Instance()->_metaBlocksHashHash.insert(mb->blockClassID(), mb);
 	qDebug("Kore / Registered meta-block for %s", qPrintable(mb->blockClassName()));
+}
+
+void KoreEngine::UnregisterMetaBlock(Kore::data::MetaBlock* mb)
+{
+	Instance()->_metaBlocksStringHash.remove(mb->blockClassName());
+	Instance()->_metaBlocksHashHash.remove(mb->blockClassID());
+	qDebug("Kore / Unregistered meta-block for %s", qPrintable(mb->blockClassName()));
 }
 
 Block* KoreEngine::CreateBlock(QString name)

@@ -32,9 +32,13 @@
 
 namespace Kore {
 
-class KoreModule : public Kore::plugin::Module
+class KoreApplication;
+
+class KoreExport KoreModule : public Kore::plugin::Module
 {
 	K_MODULE
+
+	friend class KoreApplication;
 
 public:
 	virtual QString name() const;

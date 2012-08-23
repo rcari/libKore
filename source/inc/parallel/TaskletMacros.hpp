@@ -28,11 +28,16 @@
 
 #pragma once
 
+#ifndef K_MODULE_TYPE
+#error You must define a module type !
+#endif
+
 #include <KoreEngine.hpp>
 
-#define K_TASKLET_I( taskletType ) taskletType::PrivateMetaTasklet::PrivateMetaTasklet() : MetaTasklet( # taskletType, &(taskletType::staticMetaObject) ) { Kore::KoreEngine::RegisterMetaBlock( this ); }\
+#define K_TASKLET_I( taskletType ) taskletType::PrivateMetaTasklet::PrivateMetaTasklet() : MetaTasklet( # taskletType, &(taskletType::staticMetaObject) ) {}\
 	Kore::data::Block* taskletType::PrivateMetaTasklet::createBlock() const { return K_NULL; }\
 	Kore::data::Block* taskletType::PrivateMetaTasklet::createBlock(kvoid*) const { return K_NULL; }\
 	ksize taskletType::PrivateMetaTasklet::blockSize() const { return sizeof(taskletType); }\
 	QVariant taskletType::PrivateMetaTasklet::blockProperty(int) const { return QVariant(); }\
-	taskletType::PrivateMetaTasklet* taskletType::PrivateMetaTasklet::_Instance = taskletType::PrivateMetaTasklet::Instance();
+	taskletType::PrivateMetaTasklet* taskletType::PrivateMetaTasklet::_Instance = NULL;\
+	bool taskletType::PrivateMetaTasklet::_Registered = K_MODULE_TYPE::RegisterMetaBlockInstantiator( &(taskletType::StaticMetaBlock) );

@@ -53,9 +53,11 @@ class KoreExport MetaBlock : public Block, public BlockFactory {
 protected:
 	MetaBlock(const char* className, const QMetaObject* mo);
 
+	virtual void library(Kore::data::Library* lib);
+
 public:
 	virtual bool canDestroy();
-	virtual bool destroy();
+	//virtual bool destroy();
 
 	virtual QString iconPath() const;
 	virtual Block* createBlock() const = K_NULL;
@@ -98,8 +100,6 @@ public:
 	const MetaBlock* superMetaBlock() const;
 
 protected:
-	void library(Library* lib);
-
 	kbool registerBlockExtension(BlockExtension* extension);
 	void unregisterBlockExtension(BlockExtension* extension);
 
@@ -108,6 +108,7 @@ protected:
 private:
 	void createClassID() const;
 	void createPropertiesCache() const;
+	void clearExtensions();
 
 private:
 	const QMetaObject* _blockMetaObject;
