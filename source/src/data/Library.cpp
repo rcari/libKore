@@ -50,6 +50,8 @@ bool Library::destroy()
 	// This library is being deleted, this flag will be checked when destroying the children.
 	addFlag(IsBeingDeleted);
 
+	//qDebug("Destroying library %s @ %p", qPrintable(blockName()), this);
+
 	clear(); // Destroy all child blocks.
 
 	return Block::destroy();
@@ -69,12 +71,14 @@ void Library::clear()
 
 	emit clearing();
 
-	for(int i = 0; i < this->size(); i++)
+	QList<Block*> blocks = _blocks; // Copy!
+	for(int i = 0; i < blocks.size(); i++)
 	{
-		_blocks.at(i)->destroy();
+		blocks.at(i)->destroy();
 	}
 
-	_blocks.clear();
+	K_ASSERT( _blocks.empty() )
+	//_blocks.clear();
 
 	emit cleared();
 }
@@ -147,8 +151,12 @@ void Library::removeBlock(Block* b)
 	emit removingBlock(index);
 	_blocks.removeAt(index);
 	indexBlocks(index); // Reindex the blocks...
-	b->index(-1); // Important to do that first, to indicate to the block that WE are removing it.
-	b->library(K_NULL);
+	if(b->index() == index)
+	{
+		// The library is removing the block, the block is not removing itself from the library...
+		b->index(-1); // Important to do that first, to indicate to the block that WE are removing it.
+		b->library(K_NULL);
+	}
 	emit blockRemoved(index);
 }
 

@@ -118,9 +118,6 @@ protected:
 	/*!
 	 * @property	Block::library
 	 * @brief		The library is the parent node of this Block.
-	 */
-protected:
-	/*!
 	 * Classes that inherit Block can customize the behavior upon insertion/removal of a tree
 	 * hierarchy by customizing this method.
 	 */

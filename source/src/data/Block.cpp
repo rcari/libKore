@@ -48,9 +48,9 @@ void Block::initialize()
 
 Block::~Block()
 {
-	K_ASSERT( _library == K_NULL )
+	//qDebug("Deleting Block %s (%s) @ %p", qPrintable(objectClassName()), qPrintable(blockName()), this);
 	K_ASSERT( checkFlag(IsBeingDeleted) )
-	//qDebug("Destroying %s @ %p", qPrintable(blockName()), this);
+	K_ASSERT( _library == K_NULL )
 }
 
 bool Block::destroy()
@@ -60,26 +60,15 @@ bool Block::destroy()
 	// Notify our listeners.
 	emit blockDeleted();
 
+	//qDebug("Destroying Block %s @ %p", qPrintable(blockName()), this);
+
 	// Cleanup the connection to the library
 	if(_library)
 	{
 		// We have to remove ourselves from the library only if our library is not being deleted: we are the one being deleted.
-		if(!_library->checkFlag(IsBeingDeleted))
-		{
-			// Immediate removal from the library tree.
-			_library->removeBlock(this);
-		}
-		else
-		{
-			// Announce to our listeners that we have been removed (not really but as if !)
-			emit blockRemoved();
-		}
-		setParent(K_NULL); // We do not want Qt to take care of the deletion because of the factory and all.
-		_library = K_NULL;
+		// Immediate removal from the library tree.
+		_library->removeBlock(this);
 	}
-
-	// Cleanup!!
-	QCoreApplication::removePostedEvents(this); // XXX: This might be useless...
 
 	// Actually destroy this thing.
 	if(_factory)
@@ -107,19 +96,21 @@ void Block::index(kint idx)
 
 void Block::library(Library* lib)
 {
-	if(_library)
+	if(hasParent())
 	{
 		// We test whether the Block already belongs to a Library
 		// we moreover test whether that Library is currently removing this Block
 		// in that case, there is no need to perform further removal. (tricky one :P)
 		if(_index != -1)
 		{
+			// The library is not removing us, we are removing ourselves from the library!
+			_index = -1; // Make sure the library knows that!
 			// Here the current block library is not aware that the block is about to change of owner.
-			library()->removeBlock(this);
+			_library->removeBlock(this);
 		}
-		// We set a NULL library.
-		if(lib == K_NULL)
+		else if(lib == K_NULL)
 		{
+			// We set a NULL library.
 			emit blockRemoved();
 		}
 	}

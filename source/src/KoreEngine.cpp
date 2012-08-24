@@ -101,14 +101,14 @@ void KoreEngine::RegisterMetaBlock(MetaBlock* mb)
 	Instance()->_metaBlocksStringHash.insert(mb->blockClassName(), mb);
 	K_ASSERT( !Instance()->_metaBlocksHashHash.contains(mb->blockClassID()) )
 	Instance()->_metaBlocksHashHash.insert(mb->blockClassID(), mb);
-	qDebug("Kore / Registered meta-block for %s", qPrintable(mb->blockClassName()));
+	//qDebug("Kore / Registered meta-block for %s", qPrintable(mb->blockClassName()));
 }
 
 void KoreEngine::UnregisterMetaBlock(Kore::data::MetaBlock* mb)
 {
 	Instance()->_metaBlocksStringHash.remove(mb->blockClassName());
 	Instance()->_metaBlocksHashHash.remove(mb->blockClassID());
-	qDebug("Kore / Unregistered meta-block for %s", qPrintable(mb->blockClassName()));
+	//qDebug("Kore / Unregistered meta-block for %s", qPrintable(mb->blockClassName()));
 }
 
 Block* KoreEngine::CreateBlock(QString name)

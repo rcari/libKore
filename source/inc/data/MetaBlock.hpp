@@ -45,7 +45,9 @@ namespace Kore { namespace data {
 
 class BlockExtension;
 
-class KoreExport MetaBlock : public Block, public BlockFactory {
+class KoreExport MetaBlock : public Block, public BlockFactory
+{
+	Q_OBJECT
 
 	friend class Block;
 	friend class BlockExtension;

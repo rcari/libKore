@@ -33,6 +33,8 @@ using namespace Kore::data;
 #include <KoreEngine.hpp>
 using namespace Kore;
 
+#include <QtCore/QCoreApplication>
+
 BlockFactory::~BlockFactory()
 {
 }
@@ -50,6 +52,8 @@ void BlockFactory::destroyBlock(Block* b) const
 	if( kApp->isClosing() )
 	{
 		// No delete later, delete the block right away !
+		// Cleanup!!
+		QCoreApplication::removePostedEvents(b); // XXX: This might be useless...
 		delete b;
 	}
 	else

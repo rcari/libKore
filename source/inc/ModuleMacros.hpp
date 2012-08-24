@@ -43,3 +43,11 @@
 			{ _Instance = new K_MODULE_TYPE; Kore::KoreEngine::RegisterModule(_Instance); }\
 		return _Instance;\
 	}
+
+#define K_MODULE_PLUGIN_IMPL Kore::plugin::Module* K_MODULE_TYPE::_Instance = K_NULL;\
+	const Kore::plugin::Module* K_MODULE_TYPE::Instance() { return PrivateInstance(); }\
+	bool K_MODULE_TYPE::RegisterMetaBlockInstantiator(MetaBlockInstantiator instantiator) { PrivateInstance()->registerMetaBlockInstantiator(instantiator); return true; }\
+	Kore::plugin::Module* K_MODULE_TYPE::PrivateInstance()\
+	{\
+		return (_Instance == K_NULL) ? ( _Instance = new K_MODULE_TYPE ) : _Instance;\
+	}

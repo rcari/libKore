@@ -31,8 +31,8 @@ using namespace Kore::data;
 using namespace Kore::plugin;
 
 Module::Module()
+:	LibraryT<MetaBlock>(System)
 {
-	addFlag(System);
 }
 
 void Module::registerMetaBlockInstantiator(MetaBlockInstantiator instantiator)

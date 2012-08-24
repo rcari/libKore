@@ -165,12 +165,14 @@ const QMultiHash<QString,BlockExtension*>& MetaBlock::extensions() const
 
 kbool MetaBlock::registerBlockExtension(BlockExtension* extension)
 {
+	qDebug("Registering EXTENSION %s from block %s", qPrintable(extension->extensionName()), qPrintable(blockName()));
 	_extensions.insertMulti(extension->extensionName(), extension);
 	return true;
 }
 
 void MetaBlock::unregisterBlockExtension(BlockExtension* extension)
 {
+	qDebug("Unregistering EXTENSION %s from block %s", qPrintable(extension->extensionName()), qPrintable(blockName()));
 	_extensions.remove(extension->extensionName(), extension);
 }
 
