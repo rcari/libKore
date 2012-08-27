@@ -28,47 +28,26 @@
 
 #pragma once
 
-#include <data/LibraryT.hpp>
-#include <QtCore/QLinkedList>
+#ifndef K_MODULE_TYPE
+#error You must define a module name before including <ModuleMacros.hpp> !
+#endif
 
-#include "Loadable.hpp"
+#include "../KoreEngine.hpp"
 
-namespace Kore { namespace plugin {
+#define K_MODULE_IMPL Kore::plugin::Module* K_MODULE_TYPE::_Instance = K_MODULE_TYPE::PrivateInstance();\
+	const Kore::plugin::Module* K_MODULE_TYPE::Instance() { return PrivateInstance(); }\
+	bool K_MODULE_TYPE::RegisterLoadable(Loadable::Instantiator instantiator) { PrivateInstance()->registerLoadable(instantiator); return true; }\
+	Kore::plugin::Module* K_MODULE_TYPE::PrivateInstance()\
+	{\
+		if(_Instance == K_NULL)\
+			{ _Instance = new K_MODULE_TYPE; Kore::KoreEngine::RegisterModule(_Instance); }\
+		return _Instance;\
+	}
 
-class KoreExport Module : public Kore::data::LibraryT<Loadable>
-{
-	Q_OBJECT
-
-	Q_PROPERTY( QString name READ name DESIGNABLE true )
-	Q_PROPERTY( QString author READ author DESIGNABLE true )
-	Q_PROPERTY( QString url READ url DESIGNABLE true )
-	Q_PROPERTY( QString version READ version DESIGNABLE true )
-
-protected:
-	Module();
-
-public:
-	kbool load();
-	kbool unload();
-
-public:
-	virtual QString name() const = 0;
-	virtual QString author() const = 0;
-	virtual QString url() const = 0;
-	virtual QString version() const = 0;
-
-	void registerLoadable(Kore::plugin::Loadable::Instantiator instantiator);
-
-private:
-	QLinkedList<Kore::plugin::Loadable::Instantiator> _instantiators;
-};
-
-}}
-
-#define K_MODULE friend class Kore::data::MetaBlock;\
-	public:\
-		static const Kore::plugin::Module* Instance();\
-		static bool RegisterLoadable(Kore::plugin::Loadable::Instantiator);\
-	private:\
-		static Kore::plugin::Module* PrivateInstance();\
-		static Kore::plugin::Module* _Instance;
+#define K_MODULE_PLUGIN_IMPL Kore::plugin::Module* K_MODULE_TYPE::_Instance = K_NULL;\
+	const Kore::plugin::Module* K_MODULE_TYPE::Instance() { return PrivateInstance(); }\
+	bool K_MODULE_TYPE::RegisterLoadable(Loadable::Instantiator instantiator) { PrivateInstance()->registerLoadable(instantiator); return true; }\
+	Kore::plugin::Module* K_MODULE_TYPE::PrivateInstance()\
+	{\
+		return (_Instance == K_NULL) ? ( _Instance = new K_MODULE_TYPE ) : _Instance;\
+	}

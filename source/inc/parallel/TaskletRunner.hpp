@@ -39,7 +39,7 @@ class Tasklet;
 /*!
  * @class TaskletRunner
  *
- * A TaskletRunner represents an implentation of a Tasklet's set of operations.
+ * A TaskletRunner represents an implementation of a Tasklet's set of operations.
  */
 class KoreExport TaskletRunner
 {

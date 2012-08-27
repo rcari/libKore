@@ -40,4 +40,4 @@
 	ksize taskletType::PrivateMetaTasklet::blockSize() const { return sizeof(taskletType); }\
 	QVariant taskletType::PrivateMetaTasklet::blockProperty(int) const { return QVariant(); }\
 	taskletType::PrivateMetaTasklet* taskletType::PrivateMetaTasklet::_Instance = NULL;\
-	bool taskletType::PrivateMetaTasklet::_Registered = K_MODULE_TYPE::RegisterMetaBlockInstantiator( &(taskletType::StaticMetaBlock) );
+	bool taskletType::PrivateMetaTasklet::_Registered = K_MODULE_TYPE::RegisterLoadable( &(taskletType::PrivateMetaTasklet::Instance) );

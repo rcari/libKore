@@ -30,7 +30,7 @@
 
 #include <KoreExport.hpp>
 
-#include "Block.hpp"
+#include <plugin/Loadable.hpp>
 #include "BlockFactory.hpp"
 
 #include <QtCore/QAtomicInt>
@@ -45,7 +45,7 @@ namespace Kore { namespace data {
 
 class BlockExtension;
 
-class KoreExport MetaBlock : public Block, public BlockFactory
+class KoreExport MetaBlock : public Kore::plugin::Loadable, public BlockFactory
 {
 	Q_OBJECT
 
@@ -58,8 +58,7 @@ protected:
 	virtual void library(Kore::data::Library* lib);
 
 public:
-	virtual bool canDestroy();
-	//virtual bool destroy();
+	virtual bool canUnload() const; // Loadable !!
 
 	virtual QString iconPath() const;
 	virtual Block* createBlock() const = K_NULL;

@@ -255,14 +255,14 @@ private:
 		virtual ksize blockSize() const;\
 		virtual QString blockIconPath() const;\
 		virtual QVariant blockProperty(kint property) const;\
-		static PrivateMetaBlock* Instance() { return (_Instance != K_NULL) ? _Instance : _Instance = new PrivateMetaBlock(); }\
+		static Kore::plugin::Loadable* Instance() { return (_Instance != K_NULL) ? _Instance : _Instance = new PrivateMetaBlock(); }\
 	private:\
 		static PrivateMetaBlock* _Instance;\
 		static bool _Registered;\
 	};\
 	public:\
-		static Kore::data::MetaBlock* StaticMetaBlock() { return PrivateMetaBlock::Instance(); }\
-		virtual Kore::data::MetaBlock* metaBlock() const { return PrivateMetaBlock::Instance(); }\
+		static Kore::data::MetaBlock* StaticMetaBlock() { return static_cast<Kore::data::MetaBlock*>(PrivateMetaBlock::Instance()); }\
+		virtual Kore::data::MetaBlock* metaBlock() const { return static_cast<Kore::data::MetaBlock*>(PrivateMetaBlock::Instance()); }\
 	private:
 
 #define K_BLOCK_CREATE_INSTANCE( block ) ( block::StaticMetaBlock()->createBlockT<block>() )

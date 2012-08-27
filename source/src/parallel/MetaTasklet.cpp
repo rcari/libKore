@@ -35,13 +35,29 @@ using namespace Kore::parallel;
 MetaTasklet::MetaTasklet(const char* taskletName, const QMetaObject* mo)
 :	Kore::data::MetaBlock(taskletName, mo)
 {
+	blockName(tr("MetaTasklet for %1").arg(taskletName));
+}
+
+bool RunnerLessThan(const TaskletRunner* r1, const TaskletRunner* r2)
+{
+	return r1->performanceScore() > r2->performanceScore();
 }
 
 void MetaTasklet::registerTaskletRunner(TaskletRunner* runner)
 {
-	int score = runner->performanceScore();
-	_runners.insert(runner->performanceScore(), runner);
+	K_ASSERT( !_runners.contains(runner) )
+	_runners.append(runner);
+	qSort(_runners.begin(), _runners.end(), &RunnerLessThan);
 	qDebug() << "Kore / Registered tasklet runner:" << runner->runnerName()
 			<< "for Tasklet:" << MetaBlock::blockClassName()
-			<< "with score:" << score;
+			<< "with score:" << runner->performanceScore();
+}
+
+void MetaTasklet::unregisterTaskletRunner(TaskletRunner* runner)
+{
+	K_ASSERT( _runners.contains(runner) )
+	_runners.removeOne(runner);
+	qSort(_runners.begin(), _runners.end(), &RunnerLessThan);
+	qDebug() << "Kore / Registered tasklet runner:" << runner->runnerName()
+			<< "for Tasklet:" << MetaBlock::blockClassName();
 }

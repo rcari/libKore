@@ -88,34 +88,3 @@ private:
 };
 
 }
-
-/*#define K_BLOCK_I_VIRTUAL( blockType ) blockType::PrivateMetaBlock::PrivateMetaBlock() : MetaBlock(&(blockType::staticMetaObject)) { setObjectName( # blockType ); Kore::KoreEngine::RegisterMetaBlock( this ); }\
-	Kore::data::Block* blockType::PrivateMetaBlock::createBlock() const { qWarning("Can not instantiate virtual block " # blockType); return K_NULL; }\
-	Kore::data::Block* blockType::PrivateMetaBlock::createBlock(kvoid*) const { qWarning("Can not instantiate virtual block " # blockType); return K_NULL; }\
-	ksize blockType::PrivateMetaBlock::blockSize() const { return sizeof(blockType); }\
-	QVariant blockType::PrivateMetaBlock::blockProperty(int property) const { return Kore::data::Block::BlockProperty(property); }\
-	blockType::PrivateMetaBlock* blockType::PrivateMetaBlock::_Instance = blockType::PrivateMetaBlock::Instance();
-
-#define K_BLOCK_I( blockType ) blockType::PrivateMetaBlock::PrivateMetaBlock() : MetaBlock(&(blockType::staticMetaObject)) { setObjectName( # blockType ); Kore::KoreEngine::RegisterMetaBlock( this ); }\
-	Kore::data::Block* blockType::PrivateMetaBlock::createBlock() const { Kore::data::Block* b = new blockType; setBlockFactory(b); return b; }\
-	Kore::data::Block* blockType::PrivateMetaBlock::createBlock(kvoid* ptr) const { Kore::data::Block* b = new (ptr) blockType; setBlockFactory(b); return b; }\
-	ksize blockType::PrivateMetaBlock::blockSize() const { return sizeof(blockType); }\
-	QVariant blockType::PrivateMetaBlock::blockProperty(int property) const { return Kore::data::Block::BlockProperty(property); }\
-	blockType::PrivateMetaBlock* blockType::PrivateMetaBlock::_Instance = blockType::PrivateMetaBlock::Instance();
-
-#define K_BLOCK_PROPERTY_I( blockType, propertyFunction ) blockType::PrivateMetaBlock::PrivateMetaBlock() : MetaBlock(&(blockType::staticMetaObject)) { setObjectName( # blockType ); Kore::KoreEngine::RegisterMetaBlock( this ); }\
-	Kore::data::Block* blockType::PrivateMetaBlock::createBlock() const { Kore::data::Block* b = new blockType; setBlockFactory(b); return b; }\
-	Kore::data::Block* blockType::PrivateMetaBlock::createBlock(kvoid* ptr) const { Kore::data::Block* b = new (ptr) blockType; setBlockFactory(b); return b; }\
-	ksize blockType::PrivateMetaBlock::blockSize() const { return sizeof(blockType); }\
-	QVariant blockType::PrivateMetaBlock::blockProperty(int property) const { return propertyFunction(property); }\
-	blockType::PrivateMetaBlock* blockType::PrivateMetaBlock::_Instance = blockType::PrivateMetaBlock::Instance();
-
-#define K_TASKLET_I( taskletType ) taskletType::PrivateMetaTasklet::PrivateMetaTasklet() : MetaTasklet(&(taskletType::staticMetaObject)) { setObjectName( # taskletType ); Kore::KoreEngine::RegisterMetaBlock( this ); }\
-	Kore::data::Block* taskletType::PrivateMetaTasklet::createBlock() const { Kore::data::Block* b = new taskletType; setBlockFactory(b); return b; }\
-	Kore::data::Block* taskletType::PrivateMetaTasklet::createBlock(kvoid*) const { Kore::data::Block* b = new (ptr) taskletType; setBlockFactory(b); return b; }\
-	ksize taskletType::PrivateMetaTasklet::blockSize() const { return sizeof(taskletType); }\
-	QVariant taskletType::PrivateMetaTasklet::blockProperty(int) const { return QVariant(); }\
-	taskletType::PrivateMetaTasklet* taskletType::PrivateMetaTasklet::_Instance = taskletType::PrivateMetaTasklet::Instance();*/
-
-#define K_TASKLET_RUNNER_I( runnerType, taskletType ) kbool runnerType::_K_Instance = runnerType::CreateInstance();\
-	runnerType::CreateInstance() { _K_Instance = new runnerType; Kore::KoreEngine::RegisterTaskletRunner<taskletType>(_K_Instance); taskletType::TaskletFactory(); }

@@ -43,8 +43,7 @@ MetaBlock::MetaBlock(const char* className, const QMetaObject* mo)
 	_superMetaBlock(K_NULL),
 	_blockClassID(K_NULL)
 {
-	blockName( className );
-	addFlag(System);
+	blockName(tr("MetaBlock for %1").arg(className));
 	_blockClassID = qHash( QByteArray::fromRawData( className, strlen(className)) );
 }
 
@@ -117,18 +116,12 @@ void MetaBlock::clearExtensions()
 	}
 }
 
-bool MetaBlock::canDestroy()
+bool MetaBlock::canUnload() const
 {
 	return _instancesCount == 0;
 }
 
-/*bool MetaBlock::destroy()
-{
-	// A Meta-Block can not be destroyed !
-	// It will be cleared when the process will terminate.
-	setParent(K_NULL); // Remove from the Qt tree for deletion !
-	return false;
-}*/
+
 
 QString MetaBlock::iconPath() const
 {

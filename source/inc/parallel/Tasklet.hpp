@@ -257,14 +257,14 @@ private:
 		virtual Kore::data::Block* createBlock(kvoid*) const;\
 		virtual ksize blockSize() const;\
 		virtual QVariant blockProperty(kint property) const;\
-		static PrivateMetaTasklet* Instance() { return (_Instance != K_NULL) ? _Instance : _Instance = new PrivateMetaTasklet(); }\
+		static Loadable* Instance() { return (_Instance != K_NULL) ? _Instance : _Instance = new PrivateMetaTasklet(); }\
 	private:\
 		static PrivateMetaTasklet* _Instance;\
 		static bool _Registered;\
 	};\
 	public:\
-		inline static Kore::data::MetaBlock* StaticMetaBlock() { return PrivateMetaTasklet::Instance(); }\
-		virtual Kore::data::MetaBlock* metaBlock() const { return PrivateMetaTasklet::Instance(); }\
-		inline static const Kore::parallel::MetaTasklet* StaticMetaTasklet() { return PrivateMetaTasklet::Instance(); }\
-		virtual const Kore::parallel::MetaTasklet* metaTasklet() const { return PrivateMetaTasklet::Instance(); }\
+		inline static Kore::data::MetaBlock* StaticMetaBlock() { return static_cast<Kore::data::MetaBlock*>(PrivateMetaTasklet::Instance()); }\
+		virtual Kore::data::MetaBlock* metaBlock() const { return static_cast<Kore::data::MetaBlock*>(PrivateMetaTasklet::Instance()); }\
+		inline static const Kore::parallel::MetaTasklet* StaticMetaTasklet() { return static_cast<Kore::parallel::MetaTasklet*>(PrivateMetaTasklet::Instance()); }\
+		virtual const Kore::parallel::MetaTasklet* metaTasklet() const { return static_cast<Kore::parallel::MetaTasklet*>(PrivateMetaTasklet::Instance()); }\
 	private:

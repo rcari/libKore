@@ -32,8 +32,6 @@
 
 #include <data/MetaBlock.hpp>
 
-#include <QtCore/QMap>
-
 namespace Kore {
 
 class KoreEngine;
@@ -77,22 +75,27 @@ protected:
 	 */
 	void registerTaskletRunner(TaskletRunner* runner);
 
+	/*!
+	 * Unregister a tasklet runner for the described tasklet.
+	 * @param runner a runner to unregister.
+	 */
+	void unregisterTaskletRunner(TaskletRunner* runner);
+
 public:
 	/*!
 	 * Get a list of available runners.
 	 * @return the list of available runners.
 	 */
-	inline const QList<const TaskletRunner*> runners() const { return _runners.values(); }
+	inline const QList<const TaskletRunner*>& runners() const { return _runners; }
 	inline const TaskletRunner* bestRunner() const
 	{
-		const QList<const TaskletRunner*> runners = _runners.values();
-		return runners.isEmpty() ? K_NULL : runners.last();
+		return _runners.isEmpty() ? K_NULL : _runners.first();
 	}
 
 	virtual QString blockIconPath() const { return QString(); }
 
 private:
-	QMap<kint,const TaskletRunner*> _runners;
+	QList<const TaskletRunner*> _runners;
 };
 
 }}

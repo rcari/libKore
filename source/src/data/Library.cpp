@@ -32,7 +32,7 @@ using namespace Kore::data;
 #include <KoreModule.hpp>
 
 #define K_BLOCK_TYPE Kore::data::Library
-#include <BlockMacros.hpp>
+#include <data/BlockMacros.hpp>
 K_BLOCK_BEGIN
 	K_BLOCK_ICON("kore/images/icons/library.png")
 	K_BLOCK_VIRTUAL

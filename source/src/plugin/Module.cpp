@@ -31,11 +31,10 @@ using namespace Kore::data;
 using namespace Kore::plugin;
 
 Module::Module()
-:	LibraryT<MetaBlock>(System)
 {
 }
 
-void Module::registerMetaBlockInstantiator(MetaBlockInstantiator instantiator)
+void Module::registerLoadable(Loadable::Instantiator instantiator)
 {
 	_instantiators.append(instantiator);
 }
@@ -45,14 +44,14 @@ bool Module::load()
 	blockName( name() );
 	while(!_instantiators.empty())
 	{
-		MetaBlockInstantiator inst = _instantiators.takeFirst();
-		MetaBlock* mb = (*inst)();
-		if(!mb)
+		Loadable::Instantiator inst = _instantiators.takeFirst();
+		Loadable* l = (*inst)();
+		if(!l)
 		{
 			clear();
 			return false;
 		}
-		addBlock(mb);
+		addBlock(l);
 	}
 	return true;
 }
@@ -62,7 +61,7 @@ bool Module::unload()
 	// Check that all meta blocks can be unloaded...
 	for(kint i = 0; i < size(); i++)
 	{
-		if(!at(i)->canDestroy())
+		if(!at(i)->canUnload())
 			return false;
 	}
 	clear();
