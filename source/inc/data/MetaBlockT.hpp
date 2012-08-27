@@ -47,7 +47,8 @@ namespace Kore { namespace data {
 
 class BlockExtension;
 
-class KoreExport MetaBlock : public Kore::plugin::Loadable, public BlockFactory
+template<typename BlockType, typename AllocatorType=DefaultBlockAllocator>
+class KoreExport MetaBlockT : public Kore::plugin::Loadable
 {
 	Q_OBJECT
 
@@ -56,22 +57,54 @@ class KoreExport MetaBlock : public Kore::plugin::Loadable, public BlockFactory
 	friend class BlockFactory;
 
 protected:
-	MetaBlock(const char* className, const QMetaObject* mo);
+	MetaBlockT()
+	:	_blockClassID(0)
+	{
+	}
 
-	virtual void library(Kore::data::Library* lib);
+	virtual void library(Kore::data::Library* lib)
+	{
+		Block::library(lib);
+
+		if(hasParent())
+		{
+			Kore::KoreEngine::RegisterMetaBlock(this);
+			createPropertiesCache(); // The metablock is fully built now!
+		}
+		else
+		{
+			clearExtensions();
+			Kore::KoreEngine::UnregisterMetaBlock(this);
+		}
+	}
 
 public:
-	virtual bool canUnload() const; // Loadable !!
+	virtual bool canUnload() const
+	{
+		return _instancesCount == 0;
+	}
 
-	virtual QString iconPath() const;
-	virtual Block* createBlock() const = K_NULL;
+	QString iconPath() const { return QString(); }
 
-	// Commodity for other factories
-	virtual Block* createBlock(kvoid*) const = K_NULL;
-	virtual ksize blockSize() const = K_NULL;
+	inline BlockType* create() const
+	{
+		kvoid* chunk = _allocator.allocate(sizeof(BlockType));
+		K_ASSERT( chunk );
+		while(!_instancesCount.ref()) {} // Ref
+		BlockType* block = new (chunk) BlockType;
+		block->addFlag(Block::Allocated);
+		return block;
+	}
 
-	inline const QMetaObject* blockMetaObject() const { return _blockMetaObject; }
-	QString blockClassName() const { return _blockMetaObject->className(); }
+	inline void destroy(BlockType* block) const
+	{
+		while(!_instancesCount.deref()) {} // Unref
+		block->~BlockType();
+		_allocator.deallocate(block);
+	}
+
+	inline const QMetaObject* blockMetaObject() const { return &BlockType::staticMetaObject; }
+	inline QString blockClassName() const { return BlockType::staticMetaObject.className(); }
 
 	inline khash blockClassID() const
 	{
@@ -90,42 +123,29 @@ public:
 		return _propertiesHashes.indexOf(propertyHash);
 	}
 
-	virtual void optimize();
+	//virtual void optimize();
 
 	virtual QString blockIconPath() const = K_NULL;
 	virtual QVariant blockProperty(kint property) const = K_NULL;
 	QVariant blockSetting(const QString& setting, const QVariant& defaultValue) const;
 
-	BlockExtension* blockExtension(const QString& name) const;
-	QList<BlockExtension*> blockExtensions(const QString& name) const;
-	const QMultiHash<QString,BlockExtension*>& extensions() const;
-
-	MetaBlock* superMetaBlock();
-	const MetaBlock* superMetaBlock() const;
-
 protected:
-	kbool registerBlockExtension(BlockExtension* extension);
-	void unregisterBlockExtension(BlockExtension* extension);
-
-	virtual void destroyBlock(Block* b) const;
-
-	inline void ref() const { while(!_instancesCount.ref()) {} }
-	inline void deref() const { while(!_instancesCount.deref()) {} }
+	kbool registerBlockExtension(BlockExtension* extension) {}
+	void unregisterBlockExtension(BlockExtension* extension) {}
 
 private:
-	void createClassID() const;
-	void createPropertiesCache() const;
+	void createClassID();
+	void createPropertiesCache();
 	void clearExtensions();
+	inline void ref() {  }
+	inline void deref() {  }
 
 private:
-	const QMetaObject* _blockMetaObject;
-	mutable MetaBlock* _superMetaBlock;
-
-	mutable khash _blockClassID;
-	mutable QVector<khash> _propertiesHashes;
-
+	mutable AllocatorType _allocator;
 	mutable QAtomicInt _instancesCount;
-	QMultiHash<QString,BlockExtension*> _extensions;
+
+	khash _blockClassID;
+	QVector<khash> _propertiesHashes;
 };
 
 }}

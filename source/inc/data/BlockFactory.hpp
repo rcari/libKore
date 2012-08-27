@@ -34,12 +34,14 @@
 namespace Kore { namespace data {
 
 class Block;
+class MetaBlock;
 
 class KoreExport BlockFactory {
 
 	friend class Block;
 
 public:
+	BlockFactory(const Kore::data::MetaBlock* mb);
 	virtual ~BlockFactory();
 
 	virtual Block* createBlock() const = K_NULL;
@@ -51,6 +53,8 @@ protected:
 	virtual void destroyBlock(Block* b) const = K_NULL;
 	void setBlockFactory(Block* b) const;
 
+private:
+	const Kore::data::MetaBlock* _mb;
 };
 
 }}

@@ -30,8 +30,9 @@
 #include <data/MetaBlock.hpp>
 using namespace Kore::data;
 
-BlockExtension::BlockExtension(const QString& extensionName)
-:	_extensionName(extensionName)
+BlockExtension::BlockExtension(const QString& name, const QString& extensionName)
+:	_name(name),
+ 	_extensionName(extensionName)
 {
 }
 
@@ -43,6 +44,11 @@ BlockExtension::~BlockExtension()
 		_registrations.at(i)->unregisterBlockExtension(this);
 	}
 	_registrations.clear();
+}
+
+const QString& BlockExtension::name() const
+{
+	return _name;
 }
 
 const QString& BlockExtension::extensionName() const

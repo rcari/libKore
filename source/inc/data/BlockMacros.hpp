@@ -70,8 +70,8 @@
 #define K_BLOCK_VIRTUAL Kore::data::Block* K_BLOCK_TYPE::PrivateMetaBlock::createBlock() const { qWarning("Can not instantiate virtual block " K_BLOCK_XSTR(K_BLOCK_TYPE)); return K_NULL; }\
 	Kore::data::Block* K_BLOCK_TYPE::PrivateMetaBlock::createBlock(kvoid*) const { qWarning("Can not instantiate virtual block " K_BLOCK_XSTR(K_BLOCK_TYPE)); return K_NULL; }
 
-#define K_BLOCK_ALLOCABLE Kore::data::Block* K_BLOCK_TYPE::PrivateMetaBlock::createBlock() const { Kore::data::Block* b = new K_BLOCK_TYPE; setBlockFactory(b); return b; }\
-	Kore::data::Block* K_BLOCK_TYPE::PrivateMetaBlock::createBlock(kvoid* ptr) const { Kore::data::Block* b = new (ptr) K_BLOCK_TYPE; setBlockFactory(b); return b; }
+#define K_BLOCK_ALLOCABLE Kore::data::Block* K_BLOCK_TYPE::PrivateMetaBlock::createBlock() const { Kore::data::Block* b = new K_BLOCK_TYPE; setBlockFactory(b); ref(); return b; }\
+	Kore::data::Block* K_BLOCK_TYPE::PrivateMetaBlock::createBlock(kvoid* ptr) const { Kore::data::Block* b = new (ptr) K_BLOCK_TYPE; setBlockFactory(b); ref(); return b; }
 
 // Properties
 #define K_BLOCK_PROPERTY_METHOD( propertyMethod ) QVariant K_BLOCK_TYPE::PrivateMetaBlock::blockProperty(int property) const { return propertyMethod(property); }

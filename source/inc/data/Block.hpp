@@ -69,13 +69,14 @@ public:
 	 */
 	enum Flags
 	{
-		IsBeingDeleted =		0x1 << 0,
-		Serializable =			0x1 << 1, 	//! The block is Serializable: should be considered for serialization.
-		Browsable =				0x1 << 2, 	//! The block is browsable, understand GUI navigable.
-		Editable =				0x1 << 3, 	//! The block is editable, users can modify it.
-		SystemOwned =			0x1 << 4,	//! The block is owned by the system (can not be deleted / removed by the user).
-		System =				0x1 << 5,	//! The block is a system library (block, factories...)
-		MAX_FLAG =				0x1 << 6,
+		Allocated =				0x1 << 0,	//! The block was allocated by its allocator
+		IsBeingDeleted =		0x1 << 1,	//! The block is currently being deleted
+		Serializable =			0x1 << 2, 	//! The block is Serializable: should be considered for serialization.
+		Browsable =				0x1 << 3, 	//! The block is browsable, understand GUI navigable.
+		Editable =				0x1 << 4, 	//! The block is editable, users can modify it.
+		SystemOwned =			0x1 << 5,	//! The block is owned by the system (can not be deleted / removed by the user).
+		System =				0x1 << 6,	//! The block is a system library (block, factories...)
+		MAX_FLAG =				0x1 << 7,
 	};
 
 	enum Properties

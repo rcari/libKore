@@ -31,34 +31,20 @@
 #include <KoreExport.hpp>
 #include <Types.hpp>
 
-#include <QtCore/QList>
-#include <QtCore/QString>
-
 namespace Kore { namespace data {
 
-class Block;
-class MetaBlock;
-
-class KoreExport BlockExtension
+class KoreExport DefaultBlockAllocator : public BlockFactory
 {
-	friend class MetaBlock;
-
 public:
-	BlockExtension(const QString& name, const QString& extensionName);
-	virtual ~BlockExtension();
+	inline kvoid* allocate(ksize blockSize)
+	{
+		return malloc(blockSize);
+	}
 
-	const QString& name() const;
-	const QString& extensionName() const;
-
-	void registerWithMetaBlock(MetaBlock* mb);
-	void unregisterWithMetaBlock(MetaBlock* mb);
-
-private:
-	QString _name;
-	QString _extensionName;
-	QList<MetaBlock*> _registrations;
+	inline void deallocate(kvoid* block)
+	{
+		free(block);
+	}
 };
 
 }}
-
-#define K_BLOCK_EXTENSION_REGISTER( BlockType ) registerWithMetaBlock(BlockType::StaticMetaBlock());

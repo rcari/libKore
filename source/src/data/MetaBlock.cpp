@@ -39,7 +39,8 @@ using namespace Kore;
 #include <QtCore/QSettings>
 
 MetaBlock::MetaBlock(const char* className, const QMetaObject* mo)
-:	_blockMetaObject(mo),
+:	BlockFactory(this),
+ 	_blockMetaObject(mo),
 	_superMetaBlock(K_NULL),
 	_blockClassID(K_NULL)
 {
@@ -158,14 +159,14 @@ const QMultiHash<QString,BlockExtension*>& MetaBlock::extensions() const
 
 kbool MetaBlock::registerBlockExtension(BlockExtension* extension)
 {
-	qDebug("Registering EXTENSION %s from block %s", qPrintable(extension->extensionName()), qPrintable(blockName()));
+	qDebug("Registering EXTENSION %s (%s) from block %s", qPrintable(extension->name()), qPrintable(extension->extensionName()), qPrintable(blockName()));
 	_extensions.insertMulti(extension->extensionName(), extension);
 	return true;
 }
 
 void MetaBlock::unregisterBlockExtension(BlockExtension* extension)
 {
-	qDebug("Unregistering EXTENSION %s from block %s", qPrintable(extension->extensionName()), qPrintable(blockName()));
+	qDebug("Unregistering EXTENSION %s (%s) from block %s", qPrintable(extension->name()), qPrintable(extension->extensionName()), qPrintable(blockName()));
 	_extensions.remove(extension->extensionName(), extension);
 }
 
@@ -196,13 +197,6 @@ void MetaBlock::destroyBlock(Block* b) const
 	// The following line is useless (and therefore commented out) here as we use deleteLater().
 	// It might however come handy if we manage ourselves the creation / deletion of Blocks.
 	//QCoreApplication::removePostedEvents(b);
-	if( kApp->isClosing() )
-	{
-		// No delete later, delete the block right away !
-		delete b;
-	}
-	else
-	{
-		b->deleteLater();
-	}
+	delete b;
+	deref();
 }

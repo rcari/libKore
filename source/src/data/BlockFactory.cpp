@@ -27,6 +27,7 @@
  */
 
 #include <data/BlockFactory.hpp>
+#include <data/MetaBlock.hpp>
 using namespace Kore::data;
 
 #include <KoreApplication.hpp>
@@ -34,6 +35,11 @@ using namespace Kore::data;
 using namespace Kore;
 
 #include <QtCore/QCoreApplication>
+
+BlockFactory::BlockFactory(const MetaBlock* mb)
+:	_mb(mb)
+{
+}
 
 BlockFactory::~BlockFactory()
 {
