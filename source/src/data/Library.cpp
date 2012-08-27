@@ -71,14 +71,10 @@ void Library::clear()
 
 	emit clearing();
 
-	QList<Block*> blocks = _blocks; // Copy!
-	for(int i = 0; i < blocks.size(); i++)
+	while(!_blocks.isEmpty())
 	{
-		blocks.at(i)->destroy();
+		_blocks.last()->destroy();
 	}
-
-	K_ASSERT( _blocks.empty() )
-	//_blocks.clear();
 
 	emit cleared();
 }
