@@ -30,6 +30,16 @@
 using namespace Kore::data;
 using namespace Kore::plugin;
 
+#include <KoreModule.hpp>
+
+#define K_BLOCK_TYPE Kore::plugin::Module
+#include <data/BlockMacros.hpp>
+K_BLOCK_BEGIN
+	K_BLOCK_ICON("kore/images/icons/module.png")
+	K_BLOCK_VIRTUAL
+	K_BLOCK_PROPERTY_DEFAULT
+K_BLOCK_END
+
 Module::Module()
 {
 }

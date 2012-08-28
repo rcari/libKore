@@ -62,10 +62,8 @@ public:
 	virtual QString iconPath() const;
 
 	virtual Block* createBlock() const = K_NULL;
-
-	// Commodity for other factories
-	//virtual Block* createBlock(kvoid*) const = K_NULL;
-	//virtual ksize blockSize() const = K_NULL;
+	template<typename T>
+	T* createBlockT() { return static_cast<T*>(createBlock()); }
 
 	inline const QMetaObject* blockMetaObject() const { return _blockMetaObject; }
 	inline QString blockClassName() const { return QLatin1String(_blockMetaObject->className()); }

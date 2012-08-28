@@ -38,6 +38,7 @@ namespace Kore { namespace plugin {
 class KoreExport Module : public Kore::data::LibraryT<Loadable>
 {
 	Q_OBJECT
+	K_BLOCK
 
 	Q_PROPERTY( QString name READ name DESIGNABLE true )
 	Q_PROPERTY( QString author READ author DESIGNABLE true )
