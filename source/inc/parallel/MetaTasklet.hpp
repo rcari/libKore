@@ -67,7 +67,7 @@ protected:
 	 * @param mo Qt meta object for the tasklet.
 	 * @return a MetaTasklet instance.
 	 */
-	MetaTasklet(const char* taskletName, const QMetaObject* mo);
+	MetaTasklet(const QMetaObject* mo);
 
 	/*!
 	 * Register a tasklet runner for the described tasklet.

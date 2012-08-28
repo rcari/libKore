@@ -43,8 +43,7 @@
 //#warning Defining the block super type is useless now ! // Not entirely true...
 #endif
 
-#define K_BLOCK_BEGIN K_BLOCK_TYPE::PrivateMetaBlock::PrivateMetaBlock() : MetaBlock( K_BLOCK_XSTR(K_BLOCK_TYPE) , &(K_BLOCK_TYPE::staticMetaObject)) {}\
-	ksize K_BLOCK_TYPE::PrivateMetaBlock::blockSize() const { return sizeof(K_BLOCK_TYPE); }\
+#define K_BLOCK_BEGIN K_BLOCK_TYPE::PrivateMetaBlock::PrivateMetaBlock() : MetaBlock(&(K_BLOCK_TYPE::staticMetaObject)) {}\
 	K_BLOCK_TYPE::PrivateMetaBlock* K_BLOCK_TYPE::PrivateMetaBlock::_Instance = NULL;\
 	bool K_BLOCK_TYPE::PrivateMetaBlock::_Registered = K_MODULE_TYPE::RegisterLoadable( &(K_BLOCK_TYPE::PrivateMetaBlock::Instance) );
 
@@ -67,11 +66,9 @@
 #endif
 
 // Instantiation
-#define K_BLOCK_VIRTUAL Kore::data::Block* K_BLOCK_TYPE::PrivateMetaBlock::createBlock() const { qWarning("Can not instantiate virtual block " K_BLOCK_XSTR(K_BLOCK_TYPE)); return K_NULL; }\
-	Kore::data::Block* K_BLOCK_TYPE::PrivateMetaBlock::createBlock(kvoid*) const { qWarning("Can not instantiate virtual block " K_BLOCK_XSTR(K_BLOCK_TYPE)); return K_NULL; }
+#define K_BLOCK_VIRTUAL Kore::data::Block* K_BLOCK_TYPE::PrivateMetaBlock::instantiate() const { qFatal("Can not instantiate virtual block " K_BLOCK_XSTR(K_BLOCK_TYPE)); return K_NULL; }
 
-#define K_BLOCK_ALLOCABLE Kore::data::Block* K_BLOCK_TYPE::PrivateMetaBlock::createBlock() const { Kore::data::Block* b = new K_BLOCK_TYPE; setBlockFactory(b); ref(); return b; }\
-	Kore::data::Block* K_BLOCK_TYPE::PrivateMetaBlock::createBlock(kvoid* ptr) const { Kore::data::Block* b = new (ptr) K_BLOCK_TYPE; setBlockFactory(b); ref(); return b; }
+#define K_BLOCK_ALLOCABLE Kore::data::Block* K_BLOCK_TYPE::PrivateMetaBlock::instantiate() const { Kore::data::Block* b = new K_BLOCK_TYPE; setBlockAllocated(b); ref(); return b; }
 
 // Properties
 #define K_BLOCK_PROPERTY_METHOD( propertyMethod ) QVariant K_BLOCK_TYPE::PrivateMetaBlock::blockProperty(int property) const { return propertyMethod(property); }

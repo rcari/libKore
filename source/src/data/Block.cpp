@@ -35,7 +35,6 @@ using namespace Kore::data;
 
 Block::Block()
 :	_library(K_NULL),
- 	_factory(K_NULL),
 	_flags(K_NULL),
  	_index(-1)
 {
@@ -71,12 +70,12 @@ bool Block::destroy()
 	}
 
 	// Actually destroy this thing.
-	if(_factory)
+	if(checkFlag(Allocated))
 	{
-		// If the block has a factory, it is in charge of releasing it.
-		_factory->destroyBlock(this);
+		// If the block was allocated
+		metaBlock()->destroyBlock(this);
 	}
-	else if(checkFlag(System)) // The block does not have a factory but is a system block.
+	else if(checkFlag(System)) // The block was not allocated but it is a system block.
 	{
 		// The block does not have a factory but should be deleted anyway as it is a SYSTEM block.
 		delete this; // Delete this straight up !
@@ -173,11 +172,6 @@ void Block::addFlag(kuint flag)
 void Block::removeFlag(kuint flag)
 {
 	(_flags & flag) ? _flags ^= flag : _flags;
-}
-
-const BlockFactory* Block::factory() const
-{
-	return _factory;
 }
 
 const MetaBlock* Block::metaBlock() const

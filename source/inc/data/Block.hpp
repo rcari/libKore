@@ -37,7 +37,6 @@
 
 namespace Kore { namespace data {
 
-class BlockFactory;
 class Library;
 class MetaBlock;
 
@@ -57,7 +56,6 @@ class KoreExport Block : public QObject
 	Q_OBJECT
 	Q_PROPERTY( QString blockName READ blockName WRITE blockName NOTIFY blockNameChanged STORED false DESIGNABLE false USER true )
 
-	friend class BlockFactory;
 	friend class Library;
 	friend class MetaBlock;
 
@@ -177,7 +175,7 @@ public:
 	 *
 	 * @return BlockFactory* the object's factory.
 	 */
-	const BlockFactory* factory() const;
+	//const BlockFactory* factory() const;
 
 	/*!
 	 * @brief	The object's meta block.
@@ -230,7 +228,6 @@ public:
 private:
 	// Better alignment: pointers first (32/64...)
 	Library*			_library;	//! The parent library // XXX: This is useless, we should use the QObject::parent() instead...
-	const BlockFactory*	_factory;	//! Factory of this Block, in charge of deletion
 	// Members afterwards
 	kuint 				_flags;		//!	The block flags
 	kint 				_index;		//! The block Index of this Block in its Library.
@@ -251,9 +248,11 @@ private:
 	private:\
 		PrivateMetaBlock();\
 	public:\
-		virtual Kore::data::Block* createBlock() const;\
-		virtual Kore::data::Block* createBlock(kvoid*) const;\
-		virtual ksize blockSize() const;\
+		Kore::data::Block* instantiate() const;\
+		template<typename T>\
+		inline T* instantiateT() const { return static_cast<T*>(instantiate()); }\
+		\
+		virtual Kore::data::Block* createBlock() const { return instantiate(); }\
 		virtual QString blockIconPath() const;\
 		virtual QVariant blockProperty(kint property) const;\
 		static Kore::plugin::Loadable* Instance() { return (_Instance != K_NULL) ? _Instance : _Instance = new PrivateMetaBlock(); }\
@@ -262,8 +261,8 @@ private:
 		static bool _Registered;\
 	};\
 	public:\
-		static Kore::data::MetaBlock* StaticMetaBlock() { return static_cast<Kore::data::MetaBlock*>(PrivateMetaBlock::Instance()); }\
+		static PrivateMetaBlock* StaticMetaBlock() { return static_cast<PrivateMetaBlock*>(PrivateMetaBlock::Instance()); }\
 		virtual Kore::data::MetaBlock* metaBlock() const { return static_cast<Kore::data::MetaBlock*>(PrivateMetaBlock::Instance()); }\
 	private:
 
-#define K_BLOCK_CREATE_INSTANCE( block ) ( block::StaticMetaBlock()->createBlockT<block>() )
+#define K_BLOCK_CREATE_INSTANCE( block ) ( block::StaticMetaBlock()->instantiateT<block>() )

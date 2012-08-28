@@ -32,10 +32,10 @@ using namespace Kore::parallel;
 
 #include <QtCore/QtDebug>
 
-MetaTasklet::MetaTasklet(const char* taskletName, const QMetaObject* mo)
-:	Kore::data::MetaBlock(taskletName, mo)
+MetaTasklet::MetaTasklet(const QMetaObject* mo)
+:	Kore::data::MetaBlock(mo)
 {
-	blockName(tr("MetaTasklet for %1").arg(taskletName));
+	blockName(tr("MetaTasklet for %1").arg(mo->className()));
 }
 
 bool RunnerLessThan(const TaskletRunner* r1, const TaskletRunner* r2)

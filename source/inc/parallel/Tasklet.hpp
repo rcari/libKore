@@ -254,8 +254,8 @@ private:
 		PrivateMetaTasklet();\
 	public:\
 		virtual Kore::data::Block* createBlock() const;\
-		virtual Kore::data::Block* createBlock(kvoid*) const;\
-		virtual ksize blockSize() const;\
+		template<typename T>\
+		T* createBlockT() const { return static_cast<T*>(createBlock()); }\
 		virtual QVariant blockProperty(kint property) const;\
 		static Loadable* Instance() { return (_Instance != K_NULL) ? _Instance : _Instance = new PrivateMetaTasklet(); }\
 	private:\

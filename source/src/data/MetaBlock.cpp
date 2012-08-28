@@ -36,16 +36,16 @@ using namespace Kore::data;
 #include <KoreEngine.hpp>
 using namespace Kore;
 
+#include <QtCore/QCoreApplication>
 #include <QtCore/QSettings>
 
-MetaBlock::MetaBlock(const char* className, const QMetaObject* mo)
-:	BlockFactory(this),
- 	_blockMetaObject(mo),
+MetaBlock::MetaBlock(const QMetaObject* mo)
+:	_blockMetaObject(mo),
 	_superMetaBlock(K_NULL),
-	_blockClassID(K_NULL)
+	_blockClassID(qHash(QByteArray::fromRawData(mo->className(), strlen(mo->className()))))
 {
-	blockName(tr("MetaBlock for %1").arg(className));
-	_blockClassID = qHash( QByteArray::fromRawData( className, strlen(className)) );
+	blockName(tr("MetaBlock for %1").arg(mo->className()));
+	createPropertiesCache();
 }
 
 void MetaBlock::library(Library* lib)
@@ -55,7 +55,6 @@ void MetaBlock::library(Library* lib)
 	if(hasParent())
 	{
 		Kore::KoreEngine::RegisterMetaBlock(this);
-		createPropertiesCache(); // The metablock is fully built now!
 	}
 	else
 	{
@@ -64,31 +63,8 @@ void MetaBlock::library(Library* lib)
 	}
 }
 
-void MetaBlock::createClassID() const
-{
-	if(_blockClassID != K_NULL)
-	{
-		return;
-	}
-
-	// Hash the class name
-	qDebug("Generating hash for string: %s", _blockMetaObject->className());
-
-	_blockClassID = qHash(
-			QByteArray::fromRawData(
-					_blockMetaObject->className(),
-					strlen(_blockMetaObject->className())
-				)
-		);
-}
-
 void MetaBlock::createPropertiesCache() const
 {
-	if(!_propertiesHashes.isEmpty())
-	{
-		return;
-	}
-
 	// Hash the properties names.
 	_propertiesHashes.resize(_blockMetaObject->propertyCount());
 	_propertiesHashes.fill(0);
@@ -122,17 +98,9 @@ bool MetaBlock::canUnload() const
 	return _instancesCount == 0;
 }
 
-
-
 QString MetaBlock::iconPath() const
 {
 	return QString("kore/images/icons/metablock.png");
-}
-
-void MetaBlock::optimize()
-{
-	createClassID();
-	createPropertiesCache();
 }
 
 QVariant MetaBlock::blockSetting(const QString& setting, const QVariant& defaultValue) const
@@ -194,9 +162,7 @@ const MetaBlock* MetaBlock::superMetaBlock() const
 
 void MetaBlock::destroyBlock(Block* b) const
 {
-	// The following line is useless (and therefore commented out) here as we use deleteLater().
-	// It might however come handy if we manage ourselves the creation / deletion of Blocks.
-	//QCoreApplication::removePostedEvents(b);
+	QCoreApplication::removePostedEvents(b);
 	delete b;
 	deref();
 }
