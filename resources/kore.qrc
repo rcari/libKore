@@ -3,5 +3,6 @@
 	<file>images/icons/block.png</file>
 	<file>images/icons/library.png</file>
 	<file>images/icons/metablock.png</file>
+	<file>images/icons/module.png</file>
 </qresource>
 </RCC>
