@@ -54,14 +54,13 @@ bool Module::load()
 	blockName( name() );
 	while(!_instantiators.empty())
 	{
-		Loadable::Instantiator inst = _instantiators.takeFirst();
-		Loadable* l = (*inst)();
-		if(!l)
+		Loadable* loadable = (_instantiators.takeFirst())();
+		if(!loadable)
 		{
 			clear();
 			return false;
 		}
-		addBlock(l);
+		addBlock(loadable);
 	}
 	return true;
 }

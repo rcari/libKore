@@ -49,8 +49,8 @@ protected:
 	Module();
 
 public:
-	kbool load();
-	kbool unload();
+	virtual kbool load();
+	virtual kbool unload();
 
 public:
 	virtual QString name() const = 0;
