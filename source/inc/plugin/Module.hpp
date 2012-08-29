@@ -40,10 +40,10 @@ class KoreExport Module : public Kore::data::LibraryT<Loadable>
 	Q_OBJECT
 	K_BLOCK
 
-	Q_PROPERTY( QString name READ name DESIGNABLE true )
-	Q_PROPERTY( QString author READ author DESIGNABLE true )
-	Q_PROPERTY( QString url READ url DESIGNABLE true )
-	Q_PROPERTY( QString version READ version DESIGNABLE true )
+	Q_PROPERTY( QString name READ name DESIGNABLE true CONSTANT FINAL )
+	Q_PROPERTY( QString author READ author DESIGNABLE true CONSTANT FINAL )
+	Q_PROPERTY( QString url READ url DESIGNABLE true CONSTANT FINAL )
+	Q_PROPERTY( QString version READ version DESIGNABLE true CONSTANT FINAL )
 
 protected:
 	Module();
