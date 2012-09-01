@@ -209,7 +209,7 @@ BlockInflater::InflationResult KoreV1::inflate(QIODevice* device, Kore::data::Bl
 			qWarning("Failed to add child %d to Block %s", i, qPrintable((*block)->blockName()));
 			if(childBlock)
 			{
-				delete childBlock;
+				childBlock->destroy();
 			}
 			return BlockInflater::Failed;
 		}
