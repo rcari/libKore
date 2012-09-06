@@ -13,5 +13,6 @@ SET (
 	${Kore_HDRS}
 	
 	${CMAKE_CURRENT_LIST_DIR}/Loadable.hpp
+        ${CMAKE_CURRENT_LIST_DIR}/ModuleMacros.hpp
 	${CMAKE_CURRENT_LIST_DIR}/PluginInterface.hpp
 )
