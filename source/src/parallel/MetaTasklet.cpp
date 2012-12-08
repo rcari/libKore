@@ -29,35 +29,36 @@
 #include <parallel/MetaTasklet.hpp>
 #include <parallel/TaskletRunner.hpp>
 using namespace Kore::parallel;
+using namespace Kore::data;
 
 #include <QtCore/QtDebug>
 
-MetaTasklet::MetaTasklet(const QMetaObject* mo)
-:	Kore::data::MetaBlock(mo)
+MetaTasklet::MetaTasklet( const QMetaObject* mo )
+    : MetaBlock( mo )
 {
-	blockName(tr("MetaTasklet for %1").arg(mo->className()));
+    blockName( tr( "MetaTasklet for %1" ).arg( mo->className() ) );
 }
 
-bool RunnerLessThan(const TaskletRunner* r1, const TaskletRunner* r2)
+bool RunnerLessThan( const TaskletRunner* r1, const TaskletRunner* r2 )
 {
-	return r1->performanceScore() > r2->performanceScore();
+    return r1->performanceScore() > r2->performanceScore();
 }
 
-void MetaTasklet::registerTaskletRunner(TaskletRunner* runner)
+void MetaTasklet::registerTaskletRunner( TaskletRunner* runner )
 {
-	K_ASSERT( !_runners.contains(runner) )
-	_runners.append(runner);
-	qSort(_runners.begin(), _runners.end(), &RunnerLessThan);
-	qDebug() << "Kore / Registered tasklet runner:" << runner->runnerName()
-			<< "for Tasklet:" << MetaBlock::blockClassName()
-			<< "with score:" << runner->performanceScore();
+    K_ASSERT( ! _runners.contains( runner ) )
+    _runners.append( runner );
+    qSort( _runners.begin(), _runners.end(), &RunnerLessThan );
+    qDebug() << "Kore / Registered tasklet runner:" << runner->runnerName()
+            << "for Tasklet:" << MetaBlock::blockClassName()
+            << "with score:" << runner->performanceScore();
 }
 
-void MetaTasklet::unregisterTaskletRunner(TaskletRunner* runner)
+void MetaTasklet::unregisterTaskletRunner( TaskletRunner* runner )
 {
-	K_ASSERT( _runners.contains(runner) )
-	_runners.removeOne(runner);
-	qSort(_runners.begin(), _runners.end(), &RunnerLessThan);
-	qDebug() << "Kore / Registered tasklet runner:" << runner->runnerName()
-			<< "for Tasklet:" << MetaBlock::blockClassName();
+    K_ASSERT( _runners.contains(runner) )
+    _runners.removeOne( runner );
+    qSort( _runners.begin(), _runners.end(), &RunnerLessThan );
+    qDebug() << "Kore / Registered tasklet runner:" << runner->runnerName()
+            << "for Tasklet:" << MetaBlock::blockClassName();
 }

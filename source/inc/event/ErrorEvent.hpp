@@ -38,14 +38,14 @@ namespace Kore { namespace event {
 class KoreExport ErrorEvent : public KoreEvent
 {
 public:
-	ErrorEvent(const QString& error, const QString& details);
+    ErrorEvent( const QString& error, const QString& details );
 
-	inline const QString& error() { return _error; }
-	inline const QString& details() { return _details; }
+    inline const QString& error() { return _error; }
+    inline const QString& details() { return _details; }
 
 private:
-	QString _error;
-	QString _details;
+    QString _error;
+    QString _details;
 };
 
 }}

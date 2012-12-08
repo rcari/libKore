@@ -39,26 +39,26 @@ class Block;
 
 struct KoreExport Pointer
 {
-	inline Pointer() : data(K_NULL) {}
-	inline Pointer(kvoid* ptr) : data(ptr) {}
+    inline Pointer() : data( K_NULL ) {}
+    inline Pointer( kvoid* ptr ) : data( ptr ) {}
 
-	kvoid* data;
+    kvoid* data;
 };
 
 struct KoreExport BlockPointer
 {
-	inline BlockPointer() : block(K_NULL) {}
-	inline BlockPointer(Block* block) : block(block) {}
+    inline BlockPointer() : block( K_NULL ) {}
+    inline BlockPointer( Block* block ) : block( block ) {}
 
-	Block* block;
+    Block* block;
 };
 
 struct KoreExport ConstBlockPointer
 {
-	inline ConstBlockPointer() : block(K_NULL) {}
-	inline ConstBlockPointer(const Block* block) : block(block) {}
+    inline ConstBlockPointer() : block( K_NULL ) {}
+    inline ConstBlockPointer( const Block* block ) : block( block ) {}
 
-	const Block* block;
+    const Block* block;
 };
 
 }}

@@ -34,18 +34,17 @@
 
 namespace Kore { namespace data {
 
-template<typename T>
+template< typename T >
 class LibraryT : public Library {
 
 public:
-	LibraryT(kuint extraFlags = 0);
-	virtual ~LibraryT();
+    LibraryT( kuint extraFlags = 0 );
+    virtual ~LibraryT();
 
-	const T* constAt(kint i) const;
-	T* at(kint i);
+    const T* constAt( kint i ) const;
+    T* at( kint i );
 };
 
 } /* namespace data */ } /* namespace Kore */
 
 #include <src/data/LibraryT.cxx>
-

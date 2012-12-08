@@ -30,41 +30,42 @@
 #include <data/MetaBlock.hpp>
 using namespace Kore::data;
 
-BlockExtension::BlockExtension(const QString& name, const QString& extensionName)
-:	_name(name),
- 	_extensionName(extensionName)
+BlockExtension::BlockExtension( const QString& name, const QString& extName )
+    : _name( name )
+    , _extensionName( extName )
 {
 }
 
 BlockExtension::~BlockExtension()
 {
-	// Cleanup registrations !
-	for(kint i = 0; i < _registrations.size(); i++)
-	{
-		_registrations.at(i)->unregisterBlockExtension(this);
-	}
-	_registrations.clear();
+    // Cleanup registrations !
+    for( int i = 0; i < _registrations.size(); ++i )
+    {
+        _registrations.at( i )->unregisterBlockExtension( this );
+    }
+    _registrations.clear();
 }
 
 const QString& BlockExtension::name() const
 {
-	return _name;
+    return _name;
 }
 
 const QString& BlockExtension::extensionName() const
 {
-	return _extensionName;
+    return _extensionName;
 }
 
-void BlockExtension::registerWithMetaBlock(MetaBlock* mb)
+void BlockExtension::registerWithMetaBlock( MetaBlock* mb )
 {
-	K_ASSERT( !_registrations.contains(mb) ) // You can't register with a block more than once !
-	_registrations.append(mb);
-	mb->registerBlockExtension(this);
+    // You can't register with a block more than once !
+    K_ASSERT( !_registrations.contains( mb ) )
+    _registrations.append( mb );
+    mb->registerBlockExtension( this );
 }
 
 void BlockExtension::unregisterWithMetaBlock(MetaBlock* mb)
 {
-	mb->unregisterBlockExtension(this);
-	_registrations.removeOne(mb);
+    mb->unregisterBlockExtension( this );
+    _registrations.removeOne( mb );
 }

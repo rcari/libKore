@@ -37,22 +37,22 @@ namespace Kore { namespace event {
 class KoreExport KoreEvent : public QEvent
 {
 public:
-	enum KoreEventType
-	{
-		Undefined = 0x00,
-		Error,
-	};
+    enum KoreEventType
+    {
+        Undefined = 0x00,
+        Error
+    };
 
 protected:
-	KoreEvent(KoreEventType t);
+    KoreEvent( KoreEventType t );
 
 public:
-	inline KoreEventType koreEventType() { return _koreEventType; }
-	inline static kint EventType() { return _EventType; }
+    inline KoreEventType koreEventType() { return _koreEventType; }
+    inline static kint EventType() { return _EventType; }
 
 private:
-	KoreEventType _koreEventType;
-	static kint _EventType;
+    KoreEventType _koreEventType;
+    static kint _EventType;
 };
 
 }}

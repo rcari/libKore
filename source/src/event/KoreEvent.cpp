@@ -29,9 +29,9 @@
 #include <event/KoreEvent.hpp>
 using namespace Kore::event;
 
-KoreEvent::KoreEvent(KoreEvent::KoreEventType t)
-:	QEvent((QEvent::Type)_EventType),
- 	_koreEventType(t)
+KoreEvent::KoreEvent( KoreEvent::KoreEventType t )
+    : QEvent( ( QEvent::Type ) _EventType )
+    , _koreEventType(t)
 {
 }
 

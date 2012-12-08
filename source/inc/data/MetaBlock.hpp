@@ -46,80 +46,84 @@ class BlockExtension;
 
 class KoreExport MetaBlock : public Kore::plugin::Loadable
 {
-	Q_OBJECT
+    Q_OBJECT
 
-	friend class Block;
-	friend class BlockExtension;
+    friend class Block;
+    friend class BlockExtension;
 
 protected:
-	MetaBlock(const QMetaObject* mo);
+    MetaBlock( const QMetaObject* mo );
 
-	virtual void library(Kore::data::Library* lib);
+    virtual void library( Kore::data::Library* lib );
 
 public:
-	virtual bool canUnload() const; // Loadable !!
+    virtual bool canUnload() const; // Loadable !!
 
-	virtual QString iconPath() const;
+    virtual QString iconPath() const;
 
-	virtual Block* createBlock() const = K_NULL;
-	template<typename T>
-	T* createBlockT() { return static_cast<T*>(createBlock()); }
+    virtual Block* createBlock() const = K_NULL;
+    template< typename T >
+    T* createBlockT() { return static_cast< T* >( createBlock() ); }
 
-	inline const QMetaObject* blockMetaObject() const { return _blockMetaObject; }
-	inline QString blockClassName() const { return QLatin1String(_blockMetaObject->className()); }
+    inline const QMetaObject* blockMetaObject() const
+        { return _blockMetaObject; }
+    inline QString blockClassName() const
+        { return QLatin1String( _blockMetaObject->className() ); }
 
-	inline khash blockClassID() const
-	{
-		K_ASSERT( _blockClassID != K_NULL )
-		return _blockClassID;
-	}
+    inline khash blockClassID() const
+    {
+        K_ASSERT( _blockClassID != K_NULL )
+        return _blockClassID;
+    }
 
-	inline khash propertyID(kint property) const
-	{
-		K_ASSERT( !_propertiesHashes.isEmpty() )
-		return _propertiesHashes.at(property);
-	}
+    inline khash propertyID( kint property ) const
+    {
+        K_ASSERT( !_propertiesHashes.isEmpty() )
+        return _propertiesHashes.at( property );
+    }
 
-	inline kint propertyIndex(khash propertyHash) const
-	{
-		K_ASSERT( !_propertiesHashes.isEmpty() )
-		return _propertiesHashes.indexOf(propertyHash);
-	}
+    inline kint propertyIndex( khash propertyHash ) const
+    {
+        K_ASSERT( ! _propertiesHashes.isEmpty() )
+        return _propertiesHashes.indexOf( propertyHash );
+    }
 
-	virtual QString blockIconPath() const = K_NULL;
-	virtual QVariant blockProperty(kint property) const = K_NULL;
-	QVariant blockSetting(const QString& setting, const QVariant& defaultValue) const;
+    virtual QString blockIconPath() const = K_NULL;
+    virtual QVariant blockProperty( kint property ) const = K_NULL;
+    QVariant blockSetting( const QString& setting,
+                           const QVariant& defaultValue ) const;
 
-	BlockExtension* blockExtension(const QString& name) const;
-	QList<BlockExtension*> blockExtensions(const QString& name) const;
-	const QMultiHash<QString,BlockExtension*>& extensions() const;
+    BlockExtension* blockExtension( const QString& name ) const;
+    QList< BlockExtension* > blockExtensions( const QString& name ) const;
+    const QMultiHash< QString, BlockExtension* >& extensions() const;
 
-	MetaBlock* superMetaBlock();
-	const MetaBlock* superMetaBlock() const;
+    MetaBlock* superMetaBlock();
+    const MetaBlock* superMetaBlock() const;
 
 protected:
-	inline void setBlockAllocated(Block* b) const { b->addFlag(Block::Allocated); }
-	kbool registerBlockExtension(BlockExtension* extension);
-	void unregisterBlockExtension(BlockExtension* extension);
+    inline void setBlockAllocated( Block* b ) const
+        { b->addFlag( Block::Allocated ); }
+    kbool registerBlockExtension( BlockExtension* extension );
+    void unregisterBlockExtension( BlockExtension* extension );
 
-	virtual void destroyBlock(Block* b) const;
+    virtual void destroyBlock( Block* b ) const;
 
-	inline void ref() const { while(!_instancesCount.ref()) {} }
-	inline void deref() const { while(!_instancesCount.deref()) {} }
-
-private:
-	void createPropertiesCache() const;
-	void clearExtensions();
+    inline void ref() const { while( ! _instancesCount.ref() ) {} }
+    inline void deref() const { while( ! _instancesCount.deref() ) {} }
 
 private:
-	const QMetaObject* _blockMetaObject;
-	mutable MetaBlock* _superMetaBlock;
+    void createPropertiesCache() const;
+    void clearExtensions();
 
-	mutable khash _blockClassID;
-	mutable QVector<khash> _propertiesHashes;
+private:
+    const QMetaObject* _blockMetaObject;
+    mutable MetaBlock* _superMetaBlock;
 
-	mutable QAtomicInt _instancesCount;
-	QMultiHash<QString,BlockExtension*> _extensions;
+    mutable khash _blockClassID;
+    mutable QVector< khash > _propertiesHashes;
+
+    mutable QAtomicInt _instancesCount;
+    QMultiHash< QString, BlockExtension* > _extensions;
 };
 
 }}

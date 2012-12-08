@@ -34,37 +34,38 @@ TaskletRunner::~TaskletRunner()
 {
 }
 
-void TaskletRunner::start(Tasklet* tasklet) const
+void TaskletRunner::start( Tasklet* tasklet ) const
 {
-	tasklet->runnerStarted();
+    tasklet->runnerStarted();
 }
 
-void TaskletRunner::cancel(Tasklet* tasklet) const
+void TaskletRunner::cancel( Tasklet* tasklet ) const
 {
-	tasklet->runnerCanceled();
+    tasklet->runnerCanceled();
 }
 
-void TaskletRunner::fail(Tasklet* tasklet) const
+void TaskletRunner::fail( Tasklet* tasklet ) const
 {
-	tasklet->runnerFailed();
+    tasklet->runnerFailed();
 }
 
-void TaskletRunner::complete(Tasklet* tasklet) const
+void TaskletRunner::complete( Tasklet* tasklet ) const
 {
-	tasklet->runnerCompleted();
+    tasklet->runnerCompleted();
 }
 
-void TaskletRunner::progress(Tasklet* tasklet, const QString& message) const
+void TaskletRunner::progress( Tasklet* tasklet, const QString& message ) const
 {
-	tasklet->runnerProgress(message);
+    tasklet->runnerProgress( message );
 }
 
-void TaskletRunner::progress(Tasklet* tasklet, kuint64 progress, kuint64 total) const
+void TaskletRunner::progress( Tasklet* tasklet,
+                              kuint64 progress, kuint64 total ) const
 {
-	tasklet->runnerProgress(progress, total);
+    tasklet->runnerProgress( progress, total );
 }
 
-kbool TaskletRunner::keepRunning(Tasklet* tasklet) const
+kbool TaskletRunner::keepRunning( Tasklet* tasklet ) const
 {
-	return tasklet->keepRunning();
+    return tasklet->keepRunning();
 }

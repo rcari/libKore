@@ -36,233 +36,258 @@ using namespace Kore::parallel;
 
 /* TRANSLATOR Kore::parallel::Tasklet */
 
-namespace Kore { namespace parallel {
+namespace {
+
+enum Events
+{
+    StartedEvent = QEvent::User,    //!< Execution started event
+    ProgressRangeEvent,             //!< Progress range event
+    ProgressMessageEvent,           //!< Progress message event
+    CanceledEvent,                  //!< Execution was canceled event
+    FailedEvent,                    //!< Execution failed event
+    CompletedEvent                  //!< Execution successfully completed event
+};
 
 class ProgressEvent : public QEvent
 {
 public:
-	ProgressEvent(const QString& message)
-	:	QEvent((QEvent::Type)Tasklet::ProgressMessageEvent),
-	 	_progress(0),
-		_total(0),
-		_message(message)
-	{
-	}
+    ProgressEvent( const QString& message )
+        : QEvent( static_cast< QEvent::Type >( ProgressMessageEvent ) )
+        , _progress( 0 )
+        , _total( 0 )
+        , _message( message )
+    {
+    }
 
-	ProgressEvent(kuint64 progress, kuint64 total)
-	:	QEvent((QEvent::Type)Tasklet::ProgressEvent),
-	 	_progress(progress),
-	 	_total(total)
-	{
-	}
+    ProgressEvent( kuint64 progress, kuint64 total )
+        : QEvent( static_cast< QEvent::Type >( ProgressRangeEvent ) )
+        , _progress( progress )
+        , _total( total )
+    {
+    }
 
 public:
-	const QString& message() const { return _message; }
-	kuint64 progress() const { return _progress; }
-	kuint64 total() const { return _total; }
+    const QString& message() const { return _message; }
+    kuint64 progress() const { return _progress; }
+    kuint64 total() const { return _total; }
 
 private:
-	kuint64 _progress;
-	kuint64 _total;
-	QString _message;
+    kuint64 _progress;
+    kuint64 _total;
+    QString _message;
 };
 
-}}
+void sendEvent( QObject* target, int eventType )
+{
+    QEvent event( static_cast< QEvent::Type >( eventType ) );
+    QCoreApplication::sendEvent( target, &event );
+}
+
+void postEvent( QObject* target, int eventType )
+{
+    QCoreApplication::postEvent(
+                target,
+                new QEvent( static_cast< QEvent::Type >( eventType ) ),
+                Qt::HighEventPriority );
+}
+
+}
 
 Tasklet::Tasklet(kbool autoDelete)
-:	_autoDelete(autoDelete),
- 	_state(NotStarted)
+    : _autoDelete( autoDelete )
+    , _state( NotStarted )
 {
 }
 
 Tasklet::~Tasklet()
 {
-	if(!checkFlag(IsBeingDeleted))
-	{
-		// The Tasklet was created on the stack ! // ???? What is that for :/
-		addFlag(IsBeingDeleted);
-	}
+    if( ! checkFlag( IsBeingDeleted ) )
+    {
+        // The Tasklet was created on the stack ! // ???? What is that for :/
+        addFlag( IsBeingDeleted );
+    }
 }
 
 QString Tasklet::runnerName() const
 {
-	return tr("Undefined Tasklet runner...");
+    return tr( "Undefined Tasklet runner" );
 }
 
 kint Tasklet::performanceScore() const
 {
-	return -1; // Lowest performance, lowest priority.
+    return -1; // Lowest performance, lowest priority.
 }
 
-void Tasklet::run(Tasklet*) const
+void Tasklet::run( Tasklet* ) const
 {
-	qWarning("The Tasklet %s has no default implementation !", qPrintable(objectClassName()));
+    qWarning( "The Tasklet %s has no default implementation !",
+              qPrintable( objectClassName() ) );
 }
 
-kbool Tasklet::waitForFinished(kulong timeout)
+kbool Tasklet::waitForFinished( kulong timeout )
 {
-	QMutexLocker locker(&_waitMutex);
-	if(_state < Canceled)
-	{
-		// Wait on the wait condition.
-		return _waitForFinished.wait(&_waitMutex, timeout);
-	}
-	return true;
+    QMutexLocker locker( &_waitMutex );
+    if( _state < Canceled )
+    {
+        // Wait on the wait condition.
+        return _waitForFinished.wait( &_waitMutex, timeout );
+    }
+    return true;
 }
 
 kbool Tasklet::isRunning() const
 {
-	return _state == Running;
+    return _state == Running;
 }
 
 void Tasklet::cancel()
 {
-	_state = Aborted; // XXX: We might have to use something stronger for that, such as QAtomicInt or a specific mutex.
+    // XXX: We might have to use something stronger for that, such as
+    // QAtomicInt or a specific mutex.
+    _state = Aborted;
 }
 
 kbool Tasklet::isCancellable() const
 {
-	return checkFlag(Cancellable);
+    return checkFlag( Cancellable );
 }
 
 const MetaTasklet* Tasklet::metaTasklet() const
 {
-	return K_NULL;
+    return K_NULL;
 }
 
-void Tasklet::customEvent(QEvent* e)
+void Tasklet::customEvent( QEvent* e )
 {
-	switch((kint)e->type())
-	{
-	case StartedEvent:
-		e->accept();
-		_state = Running;
-		emit started();
-		return; // We return !
-	case ProgressMessageEvent:
-		emit progress( static_cast<Kore::parallel::ProgressEvent*>(e)->message() );
-		return;
-	case ProgressEvent:
-		{
-			Kore::parallel::ProgressEvent* event = static_cast<Kore::parallel::ProgressEvent*>(e);
-			emit progress(event->progress(), event->total());
-		}
-		return;
-	case CanceledEvent:
-		e->accept();
-		_state = Canceled;
-		break;
-	case FailedEvent:
-		e->accept();
-		_state = Failed;
-		break;
-	case CompletedEvent:
-		e->accept();
-		_state = Completed;
-		break;
-	default:
-		Block::customEvent(e);
-		return;
-	}
+    switch( ( kuint ) e->type() )
+    {
+    case StartedEvent:
+        e->accept();
+        _state = Running;
+        emit started();
+        return; // We return !
+    case ProgressMessageEvent:
+        emit progress( static_cast< ProgressEvent* >( e )->message() );
+        return;
+    case ProgressRangeEvent:
+        {
+            ProgressEvent* event = static_cast< ProgressEvent* >( e );
+            emit progress( event->progress(), event->total() );
+        }
+        return;
+    case CanceledEvent:
+        e->accept();
+        _state = Canceled;
+        break;
+    case FailedEvent:
+        e->accept();
+        _state = Failed;
+        break;
+    case CompletedEvent:
+        e->accept();
+        _state = Completed;
+        break;
+    default:
+        Block::customEvent( e );
+        return;
+    }
 
-	// Just to factor code, for Canceled/Failed/Completed events.
-	emit ended(_state);
-	if(_autoDelete)
-	{
-		destroy();
-	}
+    // Just to factor code, for Canceled/Failed/Completed events.
+    emit ended( _state );
+    if( _autoDelete )
+    {
+        destroy();
+    }
 }
 
 void Tasklet::runnerStarted()
 {
-	_state = Running;
+    _state = Running;
 
-	_waitMutex.lock();
+    _waitMutex.lock();
 
-	if(this->thread() == QThread::currentThread())
-	{
-		QEvent event((QEvent::Type)StartedEvent);
-		QCoreApplication::sendEvent(this, &event);
-	}
-	else
-	{
-		QCoreApplication::postEvent(this, new QEvent((QEvent::Type)StartedEvent), Qt::HighEventPriority);
-	}
+    if( this->thread() == QThread::currentThread() )
+    {
+        sendEvent( this, StartedEvent );
+    }
+    else
+    {
+        postEvent( this, StartedEvent );
+    }
 }
 
 void Tasklet::runnerCanceled()
 {
-	if(this->thread() == QThread::currentThread())
-	{
-		QEvent event((QEvent::Type)CanceledEvent);
-		QCoreApplication::sendEvent(this, &event);
-	}
-	else
-	{
-		_state = Canceled; // Update right away (because of the wait condition)
-		QCoreApplication::postEvent(this, new QEvent((QEvent::Type)CanceledEvent), Qt::HighEventPriority);
-		_waitForFinished.wakeOne();
-	}
-	// Release the lock on the Tasklet.
-	_waitMutex.unlock();
+    if( this->thread() == QThread::currentThread() )
+    {
+        sendEvent( this, CanceledEvent );
+    }
+    else
+    {
+        _state = Canceled; // Update right away (because of the wait condition)
+        postEvent( this, Canceled );
+        _waitForFinished.wakeOne();
+    }
+    // Release the lock on the Tasklet.
+    _waitMutex.unlock();
 }
 
 void Tasklet::runnerFailed()
 {
-	if(this->thread() == QThread::currentThread())
-	{
-		QEvent event((QEvent::Type)FailedEvent);
-		QCoreApplication::sendEvent(this, &event);
-	}
-	else
-	{
-		_state = Failed; // Update right away (because of the wait condition)
-		QCoreApplication::postEvent(this, new QEvent((QEvent::Type)FailedEvent), Qt::HighEventPriority);
-		_waitForFinished.wakeOne();
-	}
-	// Release the lock on the Tasklet.
-	_waitMutex.unlock();
+    if( this->thread() == QThread::currentThread() )
+    {
+        sendEvent( this, FailedEvent );
+    }
+    else
+    {
+        _state = Failed; // Update right away (because of the wait condition)
+        postEvent( this, FailedEvent );
+        _waitForFinished.wakeOne();
+    }
+    // Release the lock on the Tasklet.
+    _waitMutex.unlock();
 }
 
 void Tasklet::runnerCompleted()
 {
-	if(this->thread() == QThread::currentThread())
-	{
-		QEvent event((QEvent::Type)CompletedEvent);
-		QCoreApplication::sendEvent(this, &event);
-	}
-	else
-	{
-		_state = Completed; // Update right away (because of the wait condition)
-		QCoreApplication::postEvent(this, new QEvent((QEvent::Type)CompletedEvent), Qt::HighEventPriority);
-		_waitForFinished.wakeOne();
-	}
-	// Release the lock on the Tasklet.
-	_waitMutex.unlock();
+    if( this->thread() == QThread::currentThread() )
+    {
+        sendEvent( this, CompletedEvent );
+    }
+    else
+    {
+        _state = Completed; // Update right away (because of the wait condition)
+        postEvent( this, CompletedEvent );
+        _waitForFinished.wakeOne();
+    }
+    // Release the lock on the Tasklet.
+    _waitMutex.unlock();
 }
 
-void Tasklet::runnerProgress(const QString& message)
+void Tasklet::runnerProgress( const QString& message )
 {
-	if(this->thread() == QThread::currentThread())
-	{
-		Kore::parallel::ProgressEvent event(message);
-		QCoreApplication::sendEvent(this, &event);
-	}
-	else
-	{
-		QCoreApplication::postEvent(this, new Kore::parallel::ProgressEvent(message));
-	}
+    if( this->thread() == QThread::currentThread() )
+    {
+        ProgressEvent event( message );
+        QCoreApplication::sendEvent( this, &event );
+    }
+    else
+    {
+        QCoreApplication::postEvent( this, new ProgressEvent( message ) );
+    }
 }
 
-void Tasklet::runnerProgress(kuint64 progress, kuint64 total)
+void Tasklet::runnerProgress( kuint64 progress, kuint64 total )
 {
-	if(this->thread() == QThread::currentThread())
-	{
-		Kore::parallel::ProgressEvent event(progress, total);
-		QCoreApplication::sendEvent(this, &event);
-	}
-	else
-	{
-		QCoreApplication::postEvent(this, new Kore::parallel::ProgressEvent(progress, total));
-	}
+    if( this->thread() == QThread::currentThread() )
+    {
+        ProgressEvent event( progress, total );
+        QCoreApplication::sendEvent( this, &event );
+    }
+    else
+    {
+        QCoreApplication::postEvent(
+                    this,
+                    new ProgressEvent( progress, total ) );
+    }
 }

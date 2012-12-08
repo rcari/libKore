@@ -57,45 +57,46 @@ class TaskletRunner;
  */
 class KoreExport MetaTasklet : public Kore::data::MetaBlock
 {
-	Q_OBJECT
+    Q_OBJECT
 
-	friend class Kore::KoreEngine;
+    friend class Kore::KoreEngine;
 
 protected:
-	/*!
-	 * Constructor.
-	 * @param mo Qt meta object for the tasklet.
-	 * @return a MetaTasklet instance.
-	 */
-	MetaTasklet(const QMetaObject* mo);
+    /*!
+     * Constructor.
+     * @param mo Qt meta object for the tasklet.
+     * @return a MetaTasklet instance.
+     */
+    MetaTasklet( const QMetaObject* mo );
 
-	/*!
-	 * Register a tasklet runner for the described tasklet.
-	 * @param runner a runner to register.
-	 */
-	void registerTaskletRunner(TaskletRunner* runner);
+    /*!
+     * Register a tasklet runner for the described tasklet.
+     * @param runner a runner to register.
+     */
+    void registerTaskletRunner( TaskletRunner* runner );
 
-	/*!
-	 * Unregister a tasklet runner for the described tasklet.
-	 * @param runner a runner to unregister.
-	 */
-	void unregisterTaskletRunner(TaskletRunner* runner);
+    /*!
+     * Unregister a tasklet runner for the described tasklet.
+     * @param runner a runner to unregister.
+     */
+    void unregisterTaskletRunner( TaskletRunner* runner );
 
 public:
-	/*!
-	 * Get a list of available runners.
-	 * @return the list of available runners.
-	 */
-	inline const QList<const TaskletRunner*>& runners() const { return _runners; }
-	inline const TaskletRunner* bestRunner() const
-	{
-		return _runners.isEmpty() ? K_NULL : _runners.first();
-	}
+    /*!
+     * Get a list of available runners.
+     * @return the list of available runners.
+     */
+    inline const QList< const TaskletRunner* >& runners() const
+        { return _runners; }
+    inline const TaskletRunner* bestRunner() const
+    {
+        return _runners.isEmpty() ? K_NULL : _runners.first();
+    }
 
-	virtual QString blockIconPath() const { return QString(); }
+    virtual QString blockIconPath() const { return QString(); }
 
 private:
-	QList<const TaskletRunner*> _runners;
+    QList< const TaskletRunner* > _runners;
 };
 
 }}

@@ -41,24 +41,25 @@ class MetaBlock;
 
 class KoreExport BlockExtension
 {
-	friend class MetaBlock;
+    friend class MetaBlock;
 
 public:
-	BlockExtension(const QString& name, const QString& extensionName);
-	virtual ~BlockExtension();
+    BlockExtension( const QString& name, const QString& extName );
+    virtual ~BlockExtension();
 
-	const QString& name() const;
-	const QString& extensionName() const;
+    const QString& name() const;
+    const QString& extensionName() const;
 
-	void registerWithMetaBlock(MetaBlock* mb);
-	void unregisterWithMetaBlock(MetaBlock* mb);
+    void registerWithMetaBlock( MetaBlock* mb );
+    void unregisterWithMetaBlock( MetaBlock* mb );
 
 private:
-	QString _name;
-	QString _extensionName;
-	QList<MetaBlock*> _registrations;
+    QString _name;
+    QString _extensionName;
+    QList< MetaBlock* > _registrations;
 };
 
 }}
 
-#define K_BLOCK_EXTENSION_REGISTER( BlockType ) registerWithMetaBlock(BlockType::StaticMetaBlock());
+#define K_BLOCK_EXTENSION_REGISTER( BlockType )\
+    registerWithMetaBlock( BlockType::StaticMetaBlock() );

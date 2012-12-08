@@ -37,16 +37,16 @@ namespace Kore { namespace memory {
 
 class KoreExport MemoryManager : public Kore::data::Block {
 public:
-	virtual ~MemoryManager() { }
+    virtual ~MemoryManager() { }
 
-	virtual void* mAlloc(ksize sz) const = 0;
-	virtual void* mAlloc_a(ksize sz, ksize align) const = 0;
+    virtual void* mAlloc( ksize sz ) const = 0;
+    virtual void* mAlloc_a( ksize sz, ksize alignment ) const = 0;
 
-	virtual void mFree(void* ptr) const = 0;
-	virtual void mFree_a(void* ptr) const = 0;
+    virtual void mFree( void* ptr ) const = 0;
+    virtual void mFree_a( void* ptr ) const = 0;
 
-	virtual void* mReAlloc(void* ptr, ksize sz) const = 0;
-	virtual void* mReAlloc_a(void* ptr, ksize sz, ksize align) const = 0;
+    virtual void* mReAlloc( void* ptr, ksize sz ) const = 0;
+    virtual void* mReAlloc_a( void* ptr, ksize sz, ksize align ) const = 0;
 };
 
 }}

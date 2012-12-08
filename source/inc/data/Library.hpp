@@ -39,72 +39,68 @@ namespace Kore { namespace data {
 
 class KoreExport Library : public Block {
 
-	Q_OBJECT
-
-	K_BLOCK
-
+    Q_OBJECT
+    K_BLOCK
 
 public:
-	Library(kuint extraFlags = 0);
+    Library( kuint extraFlags = 0 );
 
-	virtual bool destroy();
+    virtual bool destroy();
 
-	void serialize(kbool b);
+    void clear();
 
-	void clear();
+    template< typename T >
+    inline const T* at( kint i ) const
+        { return static_cast< T* >( _blocks.at( i ) ); }
+    inline const Block* at( kint i ) const
+        { return _blocks.at( i ); }
 
-	template<typename T>
-	inline const T* at(kint i) const { return static_cast<T*>(_blocks.at(i)); }
-	inline const Block* at(kint i) const { return _blocks.at(i); }
+    template< typename T >
+    inline T* at( kint i ) { return static_cast< T* >( _blocks.at( i ) ); }
+    inline Block* at( kint i ) { return _blocks.at( i ); }
 
-	template<typename T>
-	inline T* at(kint i) { return static_cast<T*>(_blocks.at(i)); }
-	inline Block* at(kint i) { return _blocks.at(i); }
+    inline kint size() const { return _blocks.size(); }
+    kint totalSize() const;
+    inline kbool isEmpty() const { return _blocks.empty(); }
 
-	inline kint size() const { return _blocks.size(); }
-	kint totalSize() const;
-	kbool isEmpty() const;
+    template< typename T >
+    QList< T* > findChildren( int maxDepth = -1 );
 
-	template<typename T>
-	QList<T*> findChildren(int maxDepth = -1);
+    template< typename T >
+    QList< const T* > findChildrenConst( int maxDepth = -1 ) const;
 
-	template<typename T>
-	QList<const T*> findChildrenConst(int maxDepth = -1) const;
+    virtual void optimize();
+    void optimizeTree();
 
-	virtual void optimize();
-	void optimizeTree();
+    virtual kbool acceptsBlock( Block* b ) const;
+    virtual void addBlock( Block* b );
+    virtual void removeBlock( Block* b );
+    virtual void insertBlock( Block* b, kint index );
+    virtual void swapBlocks( Block* a, Block* b );
+    virtual void moveBlock( Block* block, kint to );
 
-	virtual kbool acceptsBlock(Block* b) const;
-	virtual void addBlock(Block* b);
-	virtual void removeBlock(Block* b);
-	virtual void insertBlock(Block* b, kint index);
-	virtual void swapBlocks(Block* a, Block* b);
-	virtual void moveBlock(Block* block, kint to);
+    kbool isBrowsable() const;
+    virtual kbool isLibrary() const { return true; }
 
-	kbool isBrowsable() const;
-	virtual kbool isLibrary() const { return true; }
-
-	static QVariant BlockProperty(kint property);
+    static QVariant LibraryProperty( kint property );
 
 protected:
-	void indexBlocks(kint startOffset = 0);
+    void indexBlocks( kint startOffset = 0 );
 
 signals:
-	void addingBlock(kint index);
-	void blockAdded(kint index);
-	void removingBlock(kint index);
-	void blockRemoved(kint index);
-	/*void insertingBlock(kint index);
-	void blockInserted(kint index);*/
-	void swappingBlocks(kint index1, kint index2);
-	void blocksSwapped(kint index1, kint index2);
-	void movingBlock(kint from, kint to);
-	void blockMoved(kint from, kint to);
-	void clearing();
-	void cleared();
+    void addingBlock( kint index );
+    void blockAdded( kint index );
+    void removingBlock( kint index );
+    void blockRemoved( kint index );
+    void swappingBlocks( kint index1, kint index2 );
+    void blocksSwapped( kint index1, kint index2 );
+    void movingBlock( kint from, kint to );
+    void blockMoved( kint from, kint to );
+    void clearing();
+    void cleared();
 
 private:
-	QList<Block*> _blocks;
+    QList< Block* > _blocks;
 };
 
 } /* namespace data */ } /* namespace Kore */
