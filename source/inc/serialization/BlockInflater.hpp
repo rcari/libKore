@@ -40,17 +40,19 @@ class ProgressCallback;
 class KoreExport BlockInflater
 {
 public:
-	enum InflationResult
-	{
-		Failed = 0,
-		Canceled,
-		Skipped,
-		Success,
-	};
+    enum InflationResult
+    {
+        Failed = 0,
+        Canceled,
+        Skipped,
+        Success
+    };
 
 public:
-	virtual ~BlockInflater() {}
-	virtual InflationResult inflate(QIODevice* device, Kore::data::Block** block, ProgressCallback* callback = K_NULL) const = K_NULL;
+    virtual ~BlockInflater() {}
+    virtual InflationResult inflate(
+                QIODevice* device, Kore::data::Block** block,
+                ProgressCallback* callback = K_NULL ) const = K_NULL;
 };
 
 }}

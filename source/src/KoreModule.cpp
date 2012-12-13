@@ -34,20 +34,20 @@ K_MODULE_IMPL
 
 QString KoreModule::name() const
 {
-	return QLatin1String("libKore");
+    return QLatin1String( "libKore" );
 }
 
 QString KoreModule::version() const
 {
-	return QLatin1String(_KORE_VERSION);
+    return QLatin1String( _KORE_VERSION );
 }
 
 QString KoreModule::author() const
 {
-	return QLatin1String("Moving Pixels Labs");
+    return QLatin1String( "Moving Pixel Labs" );
 }
 
 QString KoreModule::url() const
 {
-	return QLatin1String("http://mp-labs.net");
+    return QLatin1String( "http://mp-labs.net" );
 }

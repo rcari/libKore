@@ -34,19 +34,20 @@ using namespace Kore::util;
 #include <QtCore/QString>
 
 CRC32::CRC32() {
-	initialize();
+    initialize();
 }
 
 /*
-    This function initializes "CRC Lookup Table". You only need to call it once to
-    initalize the table before using any of the other CRC32 calculation functions.
+ * This function initializes "CRC Lookup Table". You only need to call it once
+ * to initalize the table before using any of the other CRC32 calculation
+ * functions.
 */
 void CRC32::initialize()
 {
-    //0x04C11DB7 is the official polynomial used by PKZip, WinZip and Ethernet.
+    // 0x04C11DB7 is the official polynomial used by PKZip, WinZip and Ethernet.
     unsigned long ulPolynomial = 0x04C11DB7;
 
-    //memset(&this->ulTable, 0, sizeof(this->ulTable));
+    // memset( &this->ulTable, 0, sizeof( this->ulTable ) );
 
     // 256 values representing ASCII character codes.
     for(int iCodes = 0; iCodes <= 0xFF; iCodes++)
@@ -94,8 +95,9 @@ void CRC32::partialCRC(kulong *ulCRC, const kuchar *sData, kulong ulDataLength) 
     while(ulDataLength--)
     {
         //If your compiler complains about the following line, try changing each
-        //    occurrence of *ulCRC with "((unsigned long)*ulCRC)" or "*(unsigned long *)ulCRC".
-    	*(unsigned long *)ulCRC = ((*(unsigned long *)ulCRC) >> 8) ^ this->ulTable[((*(unsigned long *)ulCRC) & 0xFF) ^ *sData++];
+        // occurrence of *ulCRC with "((unsigned long)*ulCRC)" or "*(unsigned long *)ulCRC".
+        *(unsigned long *)ulCRC = ((*(unsigned long *)ulCRC) >> 8)
+                ^ this->ulTable[((*(unsigned long *)ulCRC) & 0xFF) ^ *sData++];
     }
 }
 
@@ -111,16 +113,16 @@ kulong CRC32::fullCRC(const kuchar *sData, kulong ulDataLength) const
 }
 
 khash CRC32::HashString(const kchar* data) {
-	//qDebug("Hashing String for class %s", data);
-	khash hash = Instance()->fullCRC( (kuchar*)data, strlen(data) );
-	return hash;
+    //qDebug("Hashing String for class %s", data);
+    khash hash = Instance()->fullCRC( (kuchar*)data, strlen(data) );
+    return hash;
 }
 
 const CRC32* CRC32::Instance() {
-	if(_Instance == K_NULL) {
-		_Instance = new CRC32();
-	}
-	return _Instance;
+    if(_Instance == K_NULL) {
+        _Instance = new CRC32();
+    }
+    return _Instance;
 }
 
 CRC32* CRC32::_Instance = K_NULL;

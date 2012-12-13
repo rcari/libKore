@@ -38,8 +38,12 @@ namespace Kore { namespace serialization {
 class KoreExport KoreV1 : public BlockDeflater, public BlockInflater
 {
 public:
-	virtual DeflationResult deflate(QIODevice* dest, const Kore::data::Block* block, ProgressCallback* callback) const;
-	virtual InflationResult inflate(QIODevice* device, Kore::data::Block** block, ProgressCallback* callback) const;
+    virtual DeflationResult deflate(
+                QIODevice* dest, const Kore::data::Block* block,
+                ProgressCallback* callback ) const;
+    virtual InflationResult inflate(
+                QIODevice* device, Kore::data::Block** block,
+                ProgressCallback* callback ) const;
 };
 
 }}

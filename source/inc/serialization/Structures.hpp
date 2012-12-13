@@ -37,37 +37,38 @@ namespace Kore { namespace serialization {
 
 enum KoreStreamVersions
 {
-	Initial = 0x1,
-	Version1_0 = Initial,
-	Current = Version1_0,
+    Initial = 0x1,
+    Version1_0 = Initial,
+    Current = Version1_0
 };
 
 struct KoreExport FileHeader
 {
-	FileHeader()
-	{
-		signature = qToLittleEndian( K_FOURCC('K', 'O', 'R', 'E') );
-		version = qToLittleEndian( Current );
-		QDataStream stream;
-		QtDataStreamVersion = qToLittleEndian( stream.version() ); // Current / latest Qt version ?
-		subProfileSignature = 0x0;
-		subProfileVersion = 0x0;
-		metaDataSize = 0;
-	}
-	kuint signature;
-	kuint version;
-	kuint QtDataStreamVersion;
-	kuint subProfileSignature;
-	kuint subProfileVersion;
-	kuint metaDataSize;
+    FileHeader()
+    {
+        signature = qToLittleEndian( K_FOURCC( 'K', 'O', 'R', 'E' ) );
+        version = qToLittleEndian( Current );
+        QDataStream stream;
+        // Current / latest Qt version ?
+        QtDataStreamVersion = qToLittleEndian( stream.version() );
+        subProfileSignature = 0x0;
+        subProfileVersion = 0x0;
+        metaDataSize = 0;
+    }
+    kuint signature;
+    kuint version;
+    kuint QtDataStreamVersion;
+    kuint subProfileSignature;
+    kuint subProfileVersion;
+    kuint metaDataSize;
 };
 
 struct KoreExport BlockHeader
 {
-	kuint size;
-	khash blockType;
-	kuint propertiesNb;
-	kuint childrenNb;
+    kuint size;
+    khash blockType;
+    kuint propertiesNb;
+    kuint childrenNb;
 };
 
 }}

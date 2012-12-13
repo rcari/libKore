@@ -45,19 +45,19 @@ class KoreExport Loader
 {
 
 public:
-	Loader(QIODevice* device);
+    Loader( QIODevice* device );
 
-	kbool isValid() const;
+    kbool isValid() const;
 
-	const BlockInflater* inflater() const;
+    const BlockInflater* inflater() const;
 
-	const FileHeader& header() const;
-
-private:
-	FileHeader _header;
+    const FileHeader& header() const;
 
 private:
-	KoreV1 _koreVersion1_0;
+    FileHeader _header;
+
+private:
+    KoreV1 _koreVersion1_0;
 };
 
 }}

@@ -40,107 +40,107 @@ using namespace Kore::memory;
 #include <QtCore/QCoreApplication>
 #include <QtCore/QMetaMethod>
 
-KoreApplication::KoreApplication(kint argc, kchar** argv)
-:	_argc(argc),
- 	_argv(argv),
- 	_closing(false)
+KoreApplication::KoreApplication( kint argc, kchar** argv )
+    : _argc     ( argc )
+    , _argv     ( argv )
+    , _closing  ( false )
 {
-	qDebug("Kore / Loading KoreApplication");
+    qDebug( "Kore / Loading KoreApplication" );
 
-	// First, we check that Qt was properly initialized.
-	K_ASSERT( QCoreApplication::instance() != K_NULL );
-	// Only one Kore Application instance.
-	K_ASSERT( _Instance == K_NULL )
+    // First, we check that Qt was properly initialized.
+    K_ASSERT( QCoreApplication::instance() != K_NULL );
+    // Only one Kore Application instance.
+    K_ASSERT( _Instance == K_NULL )
 
-	_Instance = this; // Store the instance !
+    _Instance = this; // Store the instance !
 
-	// Create the memory manager first!!!
-	_memoryManager = new SimpleMemoryManager();
+    // Create the memory manager first!!!
+    _memoryManager = new SimpleMemoryManager();
 
-	// Create the root library.
-	_rootLibrary = new Library(Block::System);
-	_rootLibrary->blockName("Root");
+    // Create the root library.
+    _rootLibrary = new Library( Block::System );
+    _rootLibrary->blockName( "Root" );
 
-	Library* appLib = new Library(Block::System);
-	appLib->blockName("Kore Internals");
+    Library* appLib = new Library( Block::System );
+    appLib->blockName( "Kore Internals" );
 
-	_rootLibrary->addBlock(appLib);
+    _rootLibrary->addBlock( appLib );
 
-	// Register the Kore engine
-	appLib->addBlock(KoreEngine::Instance());
+    // Register the Kore engine
+    appLib->addBlock( KoreEngine::Instance() );
 
-	// Register the memory manager.
-	appLib->addBlock(_memoryManager);
+    // Register the memory manager.
+    appLib->addBlock( _memoryManager );
 
-	// Load the module
-	KoreModule::PrivateInstance()->load();
+    // Load the module
+    KoreModule::PrivateInstance()->load();
 
-	// Create the library that will hold the application data.
-	_dataLibrary = new Library(Block::System);
-	_dataLibrary->blockName("Data");
-	_rootLibrary->addBlock(_dataLibrary);
+    // Create the library that will hold the application data.
+    _dataLibrary = new Library( Block::System );
+    _dataLibrary->blockName( "Data" );
+    _rootLibrary->addBlock( _dataLibrary );
 
-	// Optimize the root library (prepares the MetaBlock properties cache !!).
-	_rootLibrary->optimizeTree();
+    // Optimize the root library (prepares the MetaBlock properties cache !!).
+    _rootLibrary->optimizeTree();
 }
 
 KoreApplication::~KoreApplication()
 {
-	qDebug("Kore / Unloading KoreApplication");
-	// Deletes all registered engines and managers and data structures.
-	// This call effectively cleans up all heap allocated memory.
-	_rootLibrary->destroy(); //->deleteLater(); (this had no effect since QApplication::exec() has already returned)
+    qDebug( "Kore / Unloading KoreApplication" );
+    // Deletes all registered engines and managers and data structures.
+    // This call effectively cleans up all heap allocated memory.
+    _rootLibrary->destroy();
 }
 
 const Library* KoreApplication::rootLibrary() const
 {
-	return _rootLibrary;
+    return _rootLibrary;
 }
 
 const MemoryManager* KoreApplication::memoryManager() const
 {
-	return _memoryManager;
+    return _memoryManager;
 }
 
 Library* KoreApplication::dataLibrary() const
 {
-	return _dataLibrary;
+    return _dataLibrary;
 }
 
 kint KoreApplication::argc() const
 {
-	return _argc;
+    return _argc;
 }
 
 kchar** KoreApplication::argv() const
 {
-	return _argv;
+    return _argv;
 }
 
 kbool KoreApplication::isClosing() const
 {
-	return _closing;
+    return _closing;
 }
 
-void KoreApplication::exit(kint exitCode)
+void KoreApplication::exit( kint exitCode )
 {
-	_closing = true;
-	QCoreApplication::exit(exitCode);
+    _closing = true;
+    QCoreApplication::exit( exitCode );
 }
 
 void KoreApplication::quit()
 {
-	this->exit(0);
+    this->exit( 0 );
 }
 
 KoreApplication* KoreApplication::Instance()
 {
-	return _Instance;
+    return _Instance;
 }
 
 QString KoreApplication::Version()
 {
-	return QString(_KORE_VERSION);
+    return QString( _KORE_VERSION );
 }
 
 KoreApplication* KoreApplication::_Instance = K_NULL;

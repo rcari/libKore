@@ -50,124 +50,135 @@ using namespace Kore::plugin;
 /* TRANSLATOR Kore::KoreEngine */
 
 KoreEngine::KoreEngine()
-:	_modules(Block::SystemOwned)
+    : _modules( Block::SystemOwned )
 {
-	qDebug() << "Kore / Starting up on" << QDateTime::currentDateTime().toString();
+    qDebug() << "Kore / Starting up on"
+             << QDateTime::currentDateTime().toString();
 
-	blockName(tr("Kore Engine"));
-	K_ASSERT( _Instance == K_NULL )
+    blockName( tr( "Kore Engine" ) );
+    K_ASSERT( _Instance == K_NULL )
 
-	_modules.blockName(tr("Modules"));
-	addBlock(&_modules);
+    _modules.blockName( tr( "Modules" ) );
+    addBlock( &_modules );
 }
 
-void KoreEngine::customEvent(QEvent* event)
+void KoreEngine::customEvent( QEvent* event )
 {
-	if(event->type() != KoreEvent::EventType())
-	{
-		Library::customEvent(event);
-		return; // This is not an event for us !
-	}
+    if( event->type() != KoreEvent::EventType() )
+    {
+        Library::customEvent( event );
+        return; // This is not an event for us !
+    }
 
-	KoreEvent* kEvent = static_cast<KoreEvent*>(event);
-	switch(kEvent->koreEventType())
-	{
-	case KoreEvent::Error:
-		{
-			ErrorEvent* eEvent = static_cast<ErrorEvent*>(kEvent);
-			emit error(eEvent->error(), eEvent->details());
-		}
-		break;
-	default:
-		break;
-	}
+    KoreEvent* kEvent = static_cast< KoreEvent* >(event);
+    switch( kEvent->koreEventType() )
+    {
+    case KoreEvent::Error:
+        {
+            ErrorEvent* eEvent = static_cast< ErrorEvent* >( kEvent );
+            emit error( eEvent->error(), eEvent->details() );
+        }
+        break;
+    default:
+        break;
+    }
 }
 
-const QList<MetaBlock*> KoreEngine::MetaBlocks()
+const QList< MetaBlock* > KoreEngine::MetaBlocks()
 {
-	return Instance()->_metaBlocksHashHash.values();
+    return Instance()->_metaBlocksHashHash.values();
 }
 
-void KoreEngine::RegisterModule(Kore::plugin::Module* module)
+void KoreEngine::RegisterModule( Module* module )
 {
-	Instance()->_modules.addBlock(module);
-	qDebug("Kore / Registered module %s (%s)", qPrintable(module->name()), qPrintable(module->version()));
+    Instance()->_modules.addBlock( module );
+    qDebug( "Kore / Registered module %s (%s)",
+            qPrintable( module->name() ), qPrintable( module->version() ) );
 }
 
 void KoreEngine::RegisterMetaBlock(MetaBlock* mb)
 {
-	//Instance()->_metaBlocks.addBlock(mb); // TODO: Remove this, the MetaBlocks belong to their module!
-	K_ASSERT( !Instance()->_metaBlocksStringHash.contains(mb->blockClassName()) )
-	Instance()->_metaBlocksStringHash.insert(mb->blockClassName(), mb);
-	K_ASSERT( !Instance()->_metaBlocksHashHash.contains(mb->blockClassID()) )
-	Instance()->_metaBlocksHashHash.insert(mb->blockClassID(), mb);
-	//qDebug("Kore / Registered meta-block for %s", qPrintable(mb->blockClassName()));
+    QHash< QString, MetaBlock* >& mbsh = Instance()->_metaBlocksStringHash;
+    K_ASSERT( ! mbsh.contains( mb->blockClassName() ) )
+    mbsh.insert( mb->blockClassName(), mb );
+
+    QHash< khash, MetaBlock* >& mbhh = Instance()->_metaBlocksHashHash;
+    K_ASSERT( ! mbhh.contains( mb->blockClassID() ) )
+    mbhh.insert( mb->blockClassID(), mb );
+
+//    qDebug( "Kore / Registered meta-block for %s",
+//            qPrintable( mb->blockClassName() ) );
 }
 
-void KoreEngine::UnregisterMetaBlock(Kore::data::MetaBlock* mb)
+void KoreEngine::UnregisterMetaBlock( MetaBlock* mb )
 {
-	Instance()->_metaBlocksStringHash.remove(mb->blockClassName());
-	Instance()->_metaBlocksHashHash.remove(mb->blockClassID());
-	//qDebug("Kore / Unregistered meta-block for %s", qPrintable(mb->blockClassName()));
+    Instance()->_metaBlocksStringHash.remove( mb->blockClassName() );
+    Instance()->_metaBlocksHashHash.remove( mb->blockClassID() );
+//    qDebug( "Kore / Unregistered meta-block for %s",
+//            qPrintable( mb->blockClassName() ) );
 }
 
-Block* KoreEngine::CreateBlock(QString name)
+Block* KoreEngine::CreateBlock( const QString& name )
 {
-	const MetaBlock* mb = GetMetaBlock(name);
-	return mb ? mb->createBlock() : K_NULL;
+    const MetaBlock* mb = GetMetaBlock( name );
+    return mb ? mb->createBlock() : K_NULL;
 }
 
-void KoreEngine::RunTasklet(Tasklet* tasklet, TaskletRunner::RunMode mode)
+void KoreEngine::RunTasklet( Tasklet* tasklet, TaskletRunner::RunMode mode )
 {
-	// Find the runner.
-	const TaskletRunner* runner = tasklet->metaTasklet() ? tasklet->metaTasklet()->bestRunner() : K_NULL;
-	runner = runner ? runner : tasklet; // Because the tasklet is its default runner as well !
+    // Find the runner.
+    const TaskletRunner* runner = tasklet->metaTasklet()
+            ? tasklet->metaTasklet()->bestRunner()
+            : K_NULL;
 
-	switch(mode)
-	{
-	case TaskletRunner::Synchronous:
-		runner->run(tasklet); // Run right here on the current thread.
-		break;
-	case TaskletRunner::Asynchronous:
-		// TODO: Manage our own thread pool ? Would that be useful ?
-		QtConcurrent::run(runner, &TaskletRunner::run, tasklet); // Use a future, Qt ThreadPool.
-		break;
-	default:
-		qWarning("Kore / Unknown running mode for tasklet %s", qPrintable(tasklet->objectClassName()));
-		break;
-	}
+     // Because the tasklet is its default runner as well !
+    runner = runner ? runner : tasklet;
+
+    switch( mode )
+    {
+    case TaskletRunner::Synchronous:
+        // Run right here on the current thread.
+        runner->run( tasklet );
+        break;
+    case TaskletRunner::Asynchronous:
+        // TODO: Manage our own thread pool ? Would that be useful ?
+        // Use a future, Qt ThreadPool.
+        QtConcurrent::run( runner, &TaskletRunner::run, tasklet );
+        break;
+    default:
+        qWarning( "Kore / Unknown running mode for tasklet %s",
+                  qPrintable(tasklet->objectClassName() ) );
+        break;
+    }
 }
 
-MetaBlock* KoreEngine::GetMetaBlock(QString name)
+MetaBlock* KoreEngine::GetMetaBlock( const QString& name )
 {
-	return Instance()->_metaBlocksStringHash.value(name, K_NULL);
+    return Instance()->_metaBlocksStringHash.value( name, K_NULL );
 }
 
-MetaBlock* KoreEngine::GetMetaBlock(khash blockTypeHash)
+MetaBlock* KoreEngine::GetMetaBlock( khash blockTypeHash )
 {
-	return Instance()->_metaBlocksHashHash.value(blockTypeHash, K_NULL);
+    return Instance()->_metaBlocksHashHash.value( blockTypeHash, K_NULL );
 }
 
-void KoreEngine::Error(QString error, QString details)
+void KoreEngine::Error( const QString& error, const QString& details )
 {
-	// Set a default details string.
-	details = details.isNull() ? tr("None") : details;
-
-	if(QThread::currentThread() == Instance()->thread())
-	{
-		ErrorEvent event(error, details);
-		QCoreApplication::sendEvent(Instance(), &event);
-	}
-	else
-	{
-		ErrorEvent* event = new ErrorEvent(error, details);
-		QCoreApplication::postEvent(Instance(), event);
-	}
+    if( QThread::currentThread() == Instance()->thread() )
+    {
+        ErrorEvent event( error, details );
+        QCoreApplication::sendEvent( Instance(), &event );
+    }
+    else
+    {
+        ErrorEvent* event = new ErrorEvent( error, details );
+        QCoreApplication::postEvent( Instance(), event );
+    }
 }
 
 KoreEngine* KoreEngine::Instance()
 {
-	return (_Instance != K_NULL) ? _Instance : _Instance = new KoreEngine();
+    return ( _Instance != K_NULL ) ? _Instance : _Instance = new KoreEngine();
 }
 
 KoreEngine* KoreEngine::_Instance = K_NULL;

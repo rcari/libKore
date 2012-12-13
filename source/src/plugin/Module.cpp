@@ -35,44 +35,44 @@ using namespace Kore::plugin;
 #define K_BLOCK_TYPE Kore::plugin::Module
 #include <data/BlockMacros.hpp>
 K_BLOCK_BEGIN
-	K_BLOCK_ICON("kore/images/icons/module.png")
-	K_BLOCK_VIRTUAL
-	K_BLOCK_PROPERTY_DEFAULT
+    K_BLOCK_ICON( "kore/images/icons/module.png" )
+    K_BLOCK_VIRTUAL
+    K_BLOCK_PROPERTY_DEFAULT
 K_BLOCK_END
 
 Module::Module()
 {
 }
 
-void Module::registerLoadable(Loadable::Instantiator instantiator)
+void Module::registerLoadable( Loadable::Instantiator instantiator )
 {
-	_instantiators.append(instantiator);
+    _instantiators.append(instantiator);
 }
 
 bool Module::load()
 {
-	blockName( name() );
-	while(!_instantiators.empty())
-	{
-		Loadable* loadable = (_instantiators.takeFirst())();
-		if(!loadable)
-		{
-			clear();
-			return false;
-		}
-		addBlock(loadable);
-	}
-	return true;
+    blockName( name() );
+    while( ! _instantiators.empty() )
+    {
+        Loadable* loadable = ( _instantiators.takeFirst() )();
+        if( ! loadable )
+        {
+            clear();
+            return false;
+        }
+        addBlock( loadable );
+    }
+    return true;
 }
 
 bool Module::unload()
 {
-	// Check that all meta blocks can be unloaded...
-	for(kint i = 0; i < size(); i++)
-	{
-		if(!at(i)->canUnload())
-			return false;
-	}
-	clear();
-	return true;
+    // Check that all meta blocks can be unloaded...
+    for( kint i = 0; i < size(); ++i )
+    {
+        if( ! at( i )->canUnload() )
+            return false;
+    }
+    clear();
+    return true;
 }

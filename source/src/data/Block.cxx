@@ -29,18 +29,18 @@
 template<typename T>
 kbool Kore::data::Block::fastInherits() const
 {
-	const QMetaObject* classMO = T::QtMetaObject();
+    const QMetaObject* classMO = T::QtMetaObject();
 
-	// Speedup proposal... Far more efficient based on pointer comparison / arithmetic.
-	// What about cache locality ?
-	// Avoid using qMetaCast based on strcmp stuff...
-	for(const QMetaObject* mo = this->metaObject(); mo; mo = mo->superClass())
-	{
-		if(mo == classMO)
-		{
-			return true;
-		}
-	}
+    // Speedup proposal... Far more efficient based on pointer arithmetic.
+    // What about cache locality ?
+    // Avoid using qMetaCast based on strcmp stuff...
+    for( const QMetaObject* mo = this->metaObject(); mo; mo = mo->superClass() )
+    {
+        if( mo == classMO )
+        {
+            return true;
+        }
+    }
 
-	return false;
+    return false;
 }

@@ -43,48 +43,51 @@ class KoreApplication;
 
 class KoreExport KoreEngine : public Kore::data::Library
 {
-	friend class KoreApplication;
+    friend class KoreApplication;
 
-	Q_OBJECT
+    Q_OBJECT
 
 private:
-	KoreEngine();
+    KoreEngine();
 
 protected:
-	virtual void customEvent(QEvent* event);
+    virtual void customEvent( QEvent* event );
 
 signals:
-	void error(QString error, QString details);
+    void error( const QString& error, const QString& details );
 
 public:
-	static const QList<Kore::data::MetaBlock*> MetaBlocks();
-	static void RegisterModule(Kore::plugin::Module* module);
-	static void RegisterMetaBlock(Kore::data::MetaBlock* mb);
-	static void UnregisterMetaBlock(Kore::data::MetaBlock* mb);
-	static Kore::data::Block* CreateBlock(QString name);
+    static const QList< Kore::data::MetaBlock* > MetaBlocks();
+    static void RegisterModule( Kore::plugin::Module* module );
+    static void RegisterMetaBlock( Kore::data::MetaBlock* mb );
+    static void UnregisterMetaBlock( Kore::data::MetaBlock* mb );
+    static Kore::data::Block* CreateBlock( const QString& name );
 
-	template<typename T>
-	static T* CreateBlockT(QString name) { return static_cast<T*>( CreateBlock(name) ); }
+    template< typename T >
+    static T* CreateBlockT( QString name )
+        { return static_cast< T* >( CreateBlock( name ) ); }
 
-	template<typename T>
-	static void RegisterTaskletRunner(Kore::parallel::TaskletRunner* runner) { T::StaticMetaTasklet()->registerTaskletRunner(runner); }
-	static void RunTasklet(Kore::parallel::Tasklet* tasklet, Kore::parallel::TaskletRunner::RunMode mode);
+    template< typename T >
+    static void RegisterTaskletRunner( Kore::parallel::TaskletRunner* runner )
+        { T::StaticMetaTasklet()->registerTaskletRunner( runner ); }
+    static void RunTasklet( Kore::parallel::Tasklet* tasklet,
+                            Kore::parallel::TaskletRunner::RunMode mode );
 
-	static Kore::data::MetaBlock* GetMetaBlock(QString name);
-	static Kore::data::MetaBlock* GetMetaBlock(khash blockTypeHash);
+    static Kore::data::MetaBlock* GetMetaBlock( const QString& name );
+    static Kore::data::MetaBlock* GetMetaBlock( khash blockTypeHash );
 
-	static void Error(QString error, QString details = QString());
+    static void Error( const QString& error,
+                       const QString& details = QString() );
 
-	static KoreEngine* Instance();
+    static KoreEngine* Instance();
 
 private:
-	Kore::data::LibraryT<Kore::plugin::Module> _modules;
-	QHash<QString,Kore::data::MetaBlock*> _metaBlocksStringHash;
-	QHash<khash,Kore::data::MetaBlock*> _metaBlocksHashHash;
+    Kore::data::LibraryT< Kore::plugin::Module >    _modules;
+    QHash< QString, Kore::data::MetaBlock* >        _metaBlocksStringHash;
+    QHash< khash, Kore::data::MetaBlock* >          _metaBlocksHashHash;
 
 private:
-	static KoreEngine* _Instance;
-
+    static KoreEngine* _Instance;
 };
 
 }

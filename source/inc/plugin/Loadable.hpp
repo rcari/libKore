@@ -36,12 +36,12 @@ class KoreExport Loadable : public Kore::data::Block
 {
 
 public:
-	typedef Kore::plugin::Loadable* (*Instantiator)();
+    typedef Kore::plugin::Loadable* ( *Instantiator )();
 
 public:
-	Loadable() { addFlag(System); }
+    Loadable() { addFlag( System ); }
 
-	virtual kbool canUnload() const = K_NULL;
+    virtual kbool canUnload() const = K_NULL;
 };
 
 }}

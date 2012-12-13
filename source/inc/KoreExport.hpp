@@ -29,11 +29,11 @@
 #pragma once
 
 #ifdef _MSC_VER
-	#ifdef Kore_EXPORTS
-		#define KoreExport __declspec(dllexport)
-	#else
-		#define KoreExport __declspec(dllimport)
-	#endif
+#   ifdef Kore_EXPORTS
+#       define KoreExport __declspec( dllexport )
+#   else
+#       define KoreExport __declspec( dllimport )
+#   endif
 #else
-	#define KoreExport
+#   define KoreExport
 #endif

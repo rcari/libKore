@@ -40,16 +40,18 @@ class ProgressCallback;
 class KoreExport BlockDeflater
 {
 public:
-	enum DeflationResult
-	{
-		Failed = 0,
-		Canceled,
-		Skipped,
-		Success,
-	};
+    enum DeflationResult
+    {
+        Failed = 0,
+        Canceled,
+        Skipped,
+        Success
+    };
 public:
-	virtual ~BlockDeflater() {}
-	virtual DeflationResult deflate(QIODevice* dest, const Kore::data::Block* block, ProgressCallback* callback = K_NULL) const = K_NULL;
+    virtual ~BlockDeflater() {}
+    virtual DeflationResult deflate(
+                QIODevice* dest, const Kore::data::Block* block,
+                ProgressCallback* callback = K_NULL ) const = K_NULL;
 };
 
 }}

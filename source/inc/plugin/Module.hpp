@@ -35,41 +35,41 @@
 
 namespace Kore { namespace plugin {
 
-class KoreExport Module : public Kore::data::LibraryT<Loadable>
+class KoreExport Module : public Kore::data::LibraryT< Loadable >
 {
-	Q_OBJECT
-	K_BLOCK
+    Q_OBJECT
+    K_BLOCK
 
-	Q_PROPERTY( QString name READ name DESIGNABLE true CONSTANT FINAL )
-	Q_PROPERTY( QString author READ author DESIGNABLE true CONSTANT FINAL )
-	Q_PROPERTY( QString url READ url DESIGNABLE true CONSTANT FINAL )
-	Q_PROPERTY( QString version READ version DESIGNABLE true CONSTANT FINAL )
+    Q_PROPERTY( QString name READ name DESIGNABLE true CONSTANT FINAL )
+    Q_PROPERTY( QString author READ author DESIGNABLE true CONSTANT FINAL )
+    Q_PROPERTY( QString url READ url DESIGNABLE true CONSTANT FINAL )
+    Q_PROPERTY( QString version READ version DESIGNABLE true CONSTANT FINAL )
 
 protected:
-	Module();
+    Module();
 
 public:
-	virtual kbool load();
-	virtual kbool unload();
+    virtual kbool load();
+    virtual kbool unload();
 
 public:
-	virtual QString name() const = 0;
-	virtual QString author() const = 0;
-	virtual QString url() const = 0;
-	virtual QString version() const = 0;
+    virtual QString name() const = 0;
+    virtual QString author() const = 0;
+    virtual QString url() const = 0;
+    virtual QString version() const = 0;
 
-	void registerLoadable(Kore::plugin::Loadable::Instantiator instantiator);
+    void registerLoadable( Loadable::Instantiator instantiator );
 
 private:
-	QLinkedList<Kore::plugin::Loadable::Instantiator> _instantiators;
+    QLinkedList< Loadable::Instantiator > _instantiators;
 };
 
 }}
 
 #define K_MODULE friend class Kore::data::MetaBlock;\
-	public:\
-		static const Kore::plugin::Module* Instance();\
-		static bool RegisterLoadable(Kore::plugin::Loadable::Instantiator);\
-	private:\
-		static Kore::plugin::Module* PrivateInstance();\
-		static Kore::plugin::Module* _Instance;
+    public:\
+        static const Kore::plugin::Module* Instance();\
+        static bool RegisterLoadable( Kore::plugin::Loadable::Instantiator );\
+    private:\
+        static Kore::plugin::Module* PrivateInstance();\
+        static Kore::plugin::Module* _Instance;

@@ -42,39 +42,38 @@ namespace Kore {
 class KoreExport KoreApplication {
 
 public:
-	KoreApplication(kint argc, kchar** argv);
-	~KoreApplication();
+    KoreApplication( kint argc, kchar** argv );
+    ~KoreApplication();
 
-	const Kore::data::Library* rootLibrary() const;
-	const Kore::memory::MemoryManager* memoryManager() const;
+    const Kore::data::Library* rootLibrary() const;
+    const Kore::memory::MemoryManager* memoryManager() const;
 
-	Kore::data::Library* dataLibrary() const;
+    Kore::data::Library* dataLibrary() const;
 
-	kint argc() const;
-	kchar** argv() const;
+    kint argc() const;
+    kchar** argv() const;
 
-	kbool isClosing() const;
+    kbool isClosing() const;
 
-	void exit(kint exitCode = 0);
-	void quit();
+    void exit( kint exitCode = 0 );
+    void quit();
 
-	static KoreApplication* Instance();
-	static QString Version();
+    static KoreApplication* Instance();
+    static QString Version();
 
 protected:
-	Kore::data::Library* 							_rootLibrary;
-	Kore::data::Library* 							_dataLibrary;
-	Kore::memory::MemoryManager* 					_memoryManager;
+    Kore::data::Library*            _rootLibrary;
+    Kore::data::Library*            _dataLibrary;
+    Kore::memory::MemoryManager*    _memoryManager;
 
-	kint 		_argc;
-	kchar** 	_argv;
+    kint    _argc;
+    kchar** _argv;
 
-	kbool		_closing;
+    kbool   _closing;
 
-	static KoreApplication* _Instance;
+    static KoreApplication* _Instance;
 };
 
 }
 
-#define kApp (Kore::KoreApplication::Instance())
-
+#define kApp ( Kore::KoreApplication::Instance() )

@@ -49,14 +49,14 @@ class MetaTasklet;
 /*!
  * @class Tasklet
  *
- * @brief   A tasklet represents a set of data as well as a set of operations to
-            be applied to that data.
+ * @brief   A tasklet represents a set of data as well as a set of operations
+ *          to be applied to that data.
  *
  * Although the tasklet MUST contain all the required data for the computation,
- * it does not necessarily have an actual implementation of the operations to be
- * performed on its data (it implements the TaskletRunner interface though).
- * Using tasklets to implement complex operations allows such an operation to be
- * performed in various ways:
+ * it does not necessarily have an actual implementation of the operations to
+ * be performed on its data (it implements the TaskletRunner interface though).
+ * Using tasklets to implement complex operations allows such an operation to
+ * be performed in various ways:
  * - On the current thread as a standard synchronous function call
  * - Asynchronously (and take advantage of multithreading)
  * - On a different processing unit such as a GPU (using OpenCL/CUDA...)

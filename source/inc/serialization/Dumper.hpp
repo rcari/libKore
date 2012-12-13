@@ -42,17 +42,18 @@ class KoreExport Dumper
 {
 
 public:
-	Dumper(QIODevice* device, const FileHeader& header, const QByteArray& metaData = QByteArray());
-	~Dumper();
+    Dumper( QIODevice* device, const FileHeader& header,
+            const QByteArray& metaData = QByteArray() );
+    ~Dumper();
 
-	const BlockDeflater* deflater() const;
-
-private:
-	QIODevice* _device;
-	FileHeader _finalHeader;
+    const BlockDeflater* deflater() const;
 
 private:
-	KoreV1 _koreVersion1_0;
+    QIODevice* _device;
+    FileHeader _finalHeader;
+
+private:
+    KoreV1 _koreVersion1_0;
 };
 
 }}

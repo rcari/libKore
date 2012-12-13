@@ -28,30 +28,31 @@
 
 #pragma once
 
-#include <plugin/PluginInterface.hpp>
-
+#include <QtCore/QObject>
 #include <KoreExport.hpp>
 #include <Types.hpp>
 
 namespace Kore { namespace plugin {
+
+class PluginInterface;
 
 class KoreExport PluginsManager : public QObject {
 
 Q_OBJECT
 
 public:
-	PluginsManager(QString pluginDirPath);
-	virtual ~PluginsManager();
+    PluginsManager( const QString& pluginDirPath );
+    virtual ~PluginsManager();
 
-	void loadPlugins();
-	QStringList getPluginsVersion();
+    void loadPlugins();
+    QStringList getPluginsVersion();
 
 signals:
-	void pluginLoaded(plugin::PluginInterface* plugin);
+    void pluginLoaded( PluginInterface* plugin );
 
 private:
-	QList<plugin::PluginInterface*>	_plugins;
-	QString							_path;
+    QList< PluginInterface* >   _plugins;
+    QString                     _path;
 };
 
 }}

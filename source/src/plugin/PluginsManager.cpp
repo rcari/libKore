@@ -27,58 +27,56 @@
  */
 
 #include <plugin/PluginsManager.hpp>
+#include <plugin/PluginInterface.hpp>
 using namespace Kore::plugin;
 
 #include <QtCore/QDir>
 #include <QtCore/QPluginLoader>
 
-PluginsManager::PluginsManager(QString pluginDirPath)
-: _path(pluginDirPath)
+PluginsManager::PluginsManager( const QString& pluginDirPath )
+    : _path( pluginDirPath )
 {
-
 }
 
 PluginsManager::~PluginsManager()
 {
-	for(int i=0; i<_plugins.size(); i++)
-	{
-		delete _plugins.at(i);
-	}
-	_plugins.clear();
+    qDeleteAll( _plugins );
+    _plugins.clear();
 }
 
 void PluginsManager::loadPlugins()
 {
-	QDir pluginsDir(_path);
-	if(pluginsDir.exists())
-	{
-		QFileInfoList files = pluginsDir.entryInfoList(QDir::Files);
-		for(int i=0; i<files.size(); i++)
-		{
-			QPluginLoader loader(K_NULL);
-			loader.setFileName(files.at(i).canonicalFilePath());
-			if(loader.load())
-			{
-				QObject* object = loader.instance();
-				PluginInterface* plugin = qobject_cast<PluginInterface*>(object);
-				if(plugin != K_NULL)
-				{
-					_plugins.append(plugin);
-					emit pluginLoaded(plugin);
-					continue;
-				}
-			}
-		}
-	}
+    QDir pluginsDir( _path );
+    if( pluginsDir.exists() )
+    {
+        QFileInfoList files = pluginsDir.entryInfoList( QDir::Files );
+        for( int i = 0; i < files.size(); ++i )
+        {
+            QPluginLoader loader;
+            loader.setFileName( files.at( i ).canonicalFilePath() );
+            if( loader.load() )
+            {
+                QObject* object = loader.instance();
+                PluginInterface* plugin =
+                        qobject_cast< PluginInterface* >( object );
+                if( plugin != K_NULL )
+                {
+                    _plugins.append( plugin );
+                    emit pluginLoaded( plugin );
+                    continue;
+                }
+            }
+        }
+    }
 }
 
 QStringList PluginsManager::getPluginsVersion()
 {
-	QStringList versions;
-	for(int i = 0; i < _plugins.size(); i++)
-	{
-		versions << _plugins.at(i)->name();
-		versions << _plugins.at(i)->version();
-	}
-	return versions;
+    QStringList versions;
+    for( int i = 0; i < _plugins.size(); ++i )
+    {
+        versions << _plugins.at( i )->name();
+        versions << _plugins.at( i )->version();
+    }
+    return versions;
 }
